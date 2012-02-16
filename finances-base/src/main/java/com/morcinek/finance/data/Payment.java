@@ -4,9 +4,13 @@ import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
-import java.util.List;
 
-public class Payment {
+public class Payment extends ArrayList<Object> {
+
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1917069929244969776L;
 
 	private Date bookingDate;
 	private Date realizingDate;
@@ -18,9 +22,9 @@ public class Payment {
 	private String title;
 	private BigInteger transactionNumber;
 	private String additionalInformations;
-	private List<Object> properties = new ArrayList<Object>();
 
 	public Payment(Object... values) {
+		super(Arrays.asList(values));
 		bookingDate = (Date) values[0];
 		realizingDate = (Date) values[1];
 		amount = (Double) values[2];
@@ -31,7 +35,6 @@ public class Payment {
 		recepient = (String) values[7];
 		transactionNumber = (BigInteger) values[8];
 		additionalInformations = (String) values[9];
-		properties.addAll(Arrays.asList(values));
 	}
 
 	public Date getBookingDate() {
@@ -112,14 +115,6 @@ public class Payment {
 
 	public void setAdditionalInformations(String additionalInformations) {
 		this.additionalInformations = additionalInformations;
-	}
-
-	public Object get(int index) {
-		return properties.get(index);
-	}
-
-	public int size() {
-		return properties.size();
 	}
 
 }

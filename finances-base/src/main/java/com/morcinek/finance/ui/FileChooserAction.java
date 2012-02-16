@@ -6,6 +6,7 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.swing.JFileChooser;
@@ -18,7 +19,7 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import com.morcinek.finance.data.Payment;
 import com.morcinek.finance.parse.HistoryParsing;
 import com.morcinek.finance.ui.table.ListTableActionListener;
-import com.morcinek.finance.ui.table.PaymentTableModel;
+import com.morcinek.finance.ui.table.ListTableModel;
 
 public class FileChooserAction extends ListTableActionListener {
 
@@ -62,8 +63,8 @@ public class FileChooserAction extends ListTableActionListener {
 				e1.printStackTrace();
 			}
 			List<Payment> payments = historyParsing.getPayments();
-			PaymentTableModel tableModel = (PaymentTableModel) table.getModel();
-			tableModel.setItemList(payments);
+			ListTableModel tableModel = (ListTableModel) table.getModel();
+			tableModel.setData((List<List<Object>>)payments);
 			tableModel.fireTableStructureChanged();
 			
 			JTableHeader tableHeader = table.getTableHeader();
