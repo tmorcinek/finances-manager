@@ -59,8 +59,8 @@ http://www.springframework.org/schema/context/spring-context-3.0.xsd">
 		</property>
 		<property name="panelComponents">
 			<list>
-				<ref bean="deleteButton" />
-				<ref bean="addNewButton" />
+<!-- 				<ref bean="deleteButton" /> -->
+<!-- 				<ref bean="addNewButton" /> -->
 				<ref bean="testButton" />
 			</list>
 		</property>
@@ -79,7 +79,7 @@ http://www.springframework.org/schema/context/spring-context-3.0.xsd">
 			<ref bean="paymentsList" />
 		</property>
 		<property name="table">
-			<ref bean="itemTable" />
+			<ref bean="sortableTable" />
 		</property>
 	</bean>
 	<bean id="parsers" class="java.util.ArrayList">

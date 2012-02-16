@@ -116,5 +116,4 @@ public class Payment extends ArrayList<Object> {
 	public void setAdditionalInformations(String additionalInformations) {
 		this.additionalInformations = additionalInformations;
 	}
-
 }

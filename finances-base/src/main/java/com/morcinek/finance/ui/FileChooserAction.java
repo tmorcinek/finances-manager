@@ -41,13 +41,14 @@ public class FileChooserAction extends ListTableActionListener {
 	private Component parent;
 
 	private JFileChooser fileChooser = new JFileChooser();
-	
-	@Autowired(required=true)
+
+	@Autowired(required = true)
 	private HistoryParsing historyParsing;
 
 	public FileChooserAction() {
 		fileChooser.setFileFilter(csvFileFilter);
-		fileChooser.setCurrentDirectory(new File("c:/workspaces/finance_manager/finance-base/src/main/resources/history/"));
+		fileChooser.setCurrentDirectory(new File(
+				"c:/workspaces/finance_manager/finance-base/src/main/resources/history/"));
 	}
 
 	@Override
@@ -56,7 +57,7 @@ public class FileChooserAction extends ListTableActionListener {
 
 		if (returnVal == JFileChooser.APPROVE_OPTION) {
 			File file = fileChooser.getSelectedFile();
-			
+
 			try {
 				historyParsing.process(file.getAbsolutePath());
 			} catch (IOException e1) {
@@ -64,20 +65,20 @@ public class FileChooserAction extends ListTableActionListener {
 			}
 			List<Payment> payments = historyParsing.getPayments();
 			ListTableModel tableModel = (ListTableModel) table.getModel();
-			tableModel.setData((List<List<Object>>)payments);
+			tableModel.setData(new ArrayList<List<Object>>(payments));
 			tableModel.fireTableStructureChanged();
-			
+
 			JTableHeader tableHeader = table.getTableHeader();
 			tableHeader.setUpdateTableInRealTime(true);
 			tableHeader.setReorderingAllowed(true);
-			tableHeader.addMouseListener( new MouseAdapter() {
+			tableHeader.addMouseListener(new MouseAdapter() {
 
 				@Override
 				public void mouseClicked(MouseEvent e) {
 					System.out.println(e);
 					super.mouseClicked(e);
 				}
-				
+
 			});
 
 		}
