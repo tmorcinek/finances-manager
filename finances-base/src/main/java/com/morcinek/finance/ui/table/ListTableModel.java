@@ -23,10 +23,11 @@ public class ListTableModel extends AbstractTableModel {
 	 */
 	private static final long serialVersionUID = 7371969815889555383L;
 
-	private List<List<Object>> collections = new LinkedList<List<Object>>();
+	private List<List<?>> collections = new LinkedList<List<?>>();
 
 	public void setData(List<List<Object>> payments) {
-		collections = payments;
+		collections.clear();
+		collections.addAll(payments);
 	}
 
 	@Override
