@@ -22,7 +22,7 @@ public class HistoryParsing {
 
 	private List<Payment> payments = new ArrayList<Payment>();
 
-	@Autowired(required=true)
+	@Autowired(required = true)
 	public HistoryParsing(FieldParser pFieldParser) {
 		fieldParser = pFieldParser;
 	}
@@ -73,7 +73,5 @@ public class HistoryParsing {
 	public List<Payment> getPayments() {
 		return payments;
 	}
-	
-	
 
 }
