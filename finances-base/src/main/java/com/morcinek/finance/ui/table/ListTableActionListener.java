@@ -1,19 +1,26 @@
 package com.morcinek.finance.ui.table;
 
 import java.awt.event.ActionListener;
-import java.util.List;
 
-import javax.swing.JTable;
+import javax.swing.table.AbstractTableModel;
 
+import org.springframework.beans.factory.annotation.Autowired;
+
+/**
+ * ListTableActionListener is a simple ActionListener implementing class which
+ * can manipulate on date in the table.
+ * 
+ * @author Tomasz Morcinek
+ * @date 17-02-2012
+ * @time 02:42:08
+ * 
+ */
 public abstract class ListTableActionListener implements ActionListener {
-	protected JTable table;
-	protected List list;
+	protected AbstractTableModel tableModel;
 
-	public void setList(List list) {
-		this.list = list;
+	@Autowired(required = true)
+	public void setTableModel(AbstractTableModel tableModel) {
+		this.tableModel = tableModel;
 	}
 
-	public void setTable(JTable itemTable) {
-		this.table = itemTable;
-	}
 }
