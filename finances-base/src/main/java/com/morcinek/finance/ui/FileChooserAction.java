@@ -2,8 +2,6 @@ package com.morcinek.finance.ui;
 
 import java.awt.Component;
 import java.awt.event.ActionEvent;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -11,7 +9,6 @@ import java.util.List;
 
 import javax.swing.JFileChooser;
 import javax.swing.filechooser.FileFilter;
-import javax.swing.table.JTableHeader;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -19,8 +16,18 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import com.morcinek.finance.data.Payment;
 import com.morcinek.finance.parse.HistoryParsing;
 import com.morcinek.finance.ui.table.ListTableActionListener;
-import com.morcinek.finance.ui.table.ListTableModel;
+import com.morcinek.finance.ui.table.model.ListTableModel;
 
+/**
+ * FileChooserAction is an implementation of ActionListener after clicking
+ * button. Action invokes File Chooser by which we can choose the right csv
+ * file.
+ * 
+ * @author Tomasz Morcinek
+ * @date 17-02-2012
+ * @time 02:43:25
+ * 
+ */
 public class FileChooserAction extends ListTableActionListener {
 
 	private FileFilter csvFileFilter = new FileFilter() {
@@ -64,22 +71,8 @@ public class FileChooserAction extends ListTableActionListener {
 				e1.printStackTrace();
 			}
 			List<Payment> payments = historyParsing.getPayments();
-			ListTableModel tableModel = (ListTableModel) table.getModel();
-			tableModel.setData(new ArrayList<List<Object>>(payments));
+			((ListTableModel) tableModel).setData(new ArrayList<List<?>>(payments));
 			tableModel.fireTableStructureChanged();
-
-			JTableHeader tableHeader = table.getTableHeader();
-			tableHeader.setUpdateTableInRealTime(true);
-			tableHeader.setReorderingAllowed(true);
-			tableHeader.addMouseListener(new MouseAdapter() {
-
-				@Override
-				public void mouseClicked(MouseEvent e) {
-					System.out.println(e);
-					super.mouseClicked(e);
-				}
-
-			});
 
 		}
 	}

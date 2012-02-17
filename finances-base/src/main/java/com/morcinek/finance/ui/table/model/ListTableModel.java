@@ -1,4 +1,4 @@
-package com.morcinek.finance.ui.table;
+package com.morcinek.finance.ui.table.model;
 
 import java.util.LinkedList;
 import java.util.List;
@@ -23,29 +23,29 @@ public class ListTableModel extends AbstractTableModel {
 	 */
 	private static final long serialVersionUID = 7371969815889555383L;
 
-	private List<List<?>> collections = new LinkedList<List<?>>();
+	private List<List<?>> data = new LinkedList<List<?>>();
 
-	public void setData(List<List<Object>> payments) {
-		collections.clear();
-		collections.addAll(payments);
+	public void setData(List<List<?>> pData) {
+		data.clear();
+		data.addAll(pData);
 	}
 
 	@Override
 	public int getRowCount() {
-		return collections.size();
+		return data.size();
 	}
 
 	@Override
 	public int getColumnCount() {
-		if (collections.size() > 0) {
-			return collections.get(0).size();
+		if (data.size() > 0) {
+			return data.get(0).size();
 		}
 		return 0;
 	}
 
 	@Override
 	public Object getValueAt(int rowIndex, int columnIndex) {
-		return collections.get(rowIndex).get(columnIndex);
+		return data.get(rowIndex).get(columnIndex);
 	}
 
 	@Override
@@ -60,10 +60,14 @@ public class ListTableModel extends AbstractTableModel {
 
 	@Override
 	public Class<?> getColumnClass(int column) {
-		if (collections.size() > 0) {
-			return collections.get(0).get(column).getClass();
+		if (data.size() > 0) {
+			return data.get(0).get(column).getClass();
 		}
 		return super.getColumnClass(column);
+	}
+
+	public List<List<?>> getData() {
+		return data;
 	}
 
 }
