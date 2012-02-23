@@ -1,0 +1,4 @@
+Suggestions:
+	1. Sorting of columns in table. IDEAS:
+#		a) Implement sorting method on in business logic of application
+		b) Do not implement any functionality in business logic. Get sorted data from database.

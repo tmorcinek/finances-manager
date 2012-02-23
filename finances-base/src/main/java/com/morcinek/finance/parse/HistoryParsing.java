@@ -51,7 +51,7 @@ public class HistoryParsing {
 				try {
 					payment = processPaymentData(data);
 					payments.add(payment);
-				} catch (ClassCastException e) {
+				} catch (Exception e) {
 					e.printStackTrace();
 				}
 			}

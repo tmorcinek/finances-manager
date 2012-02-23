@@ -22,4 +22,5 @@ public class MainFrame extends JFrame implements ActionListener {
 	public void actionPerformed(ActionEvent e) {
 		System.out.println("jestem w action listenerze.");
 	}
+	
 }

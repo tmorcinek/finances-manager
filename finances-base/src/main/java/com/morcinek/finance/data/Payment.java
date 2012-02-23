@@ -25,16 +25,36 @@ public class Payment extends ArrayList<Object> {
 
 	public Payment(Object... values) {
 		super(Arrays.asList(values));
-		bookingDate = (Date) values[0];
-		realizingDate = (Date) values[1];
-		amount = (Double) values[2];
+		bookingDate = extractDate(values[0]);
+		realizingDate = extractDate(values[1]);
+		amount = Double.valueOf(values[2].toString());
 		currency = (String) values[3];
 		account = (String) values[4];
 		bankName = (String) values[5];
 		title = (String) values[6];
 		recepient = (String) values[7];
-		transactionNumber = (BigInteger) values[8];
+		transactionNumber = extractBigInteger(values[8]);
 		additionalInformations = (String) values[9];
+	}
+
+	private Date extractDate(Object value) {
+		Date date;
+		try {
+			date = (Date) value;
+		} catch (ClassCastException e) {
+			date = new Date(Long.parseLong(value.toString()));
+		}
+		return date;
+	}
+
+	private BigInteger extractBigInteger(Object value) {
+		BigInteger bigInteger;
+		try {
+			bigInteger = (BigInteger) value;
+		} catch (Exception e) {
+			bigInteger = new BigInteger(value.toString());
+		}
+		return bigInteger;
 	}
 
 	public Date getBookingDate() {
