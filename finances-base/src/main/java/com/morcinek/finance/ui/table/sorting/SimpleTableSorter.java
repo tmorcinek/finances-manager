@@ -1,4 +1,4 @@
-package com.morcinek.finance.ui.table;
+package com.morcinek.finance.ui.table.sorting;
 
 import javax.swing.table.TableModel;
 
@@ -7,7 +7,8 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
 
 /**
- * SimpleTableSorter is a class which implements simple sorting algorithm.
+ * SimpleTableSorter is a class which implements simple sorting algorithm
+ * (BubleSort).
  * 
  * @author Tomasz Morcinek
  * @date 17-02-2012
@@ -15,7 +16,7 @@ import org.springframework.stereotype.Component;
  * 
  */
 @Component
-public class SimpleTableSorter {
+public class SimpleTableSorter implements TableSorterInterface {
 
 	private TableModel tableModel;
 
@@ -47,6 +48,11 @@ public class SimpleTableSorter {
 		}
 	}
 
+	@Override
+	public void addSort(int[] indexes, int column, boolean isAscent) {
+		sort(indexes, column, isAscent);
+	}
+
 	@SuppressWarnings("unchecked")
 	private int compare(int column, int row1, int row2) {
 		Object o1 = tableModel.getValueAt(row1, column);
@@ -58,4 +64,5 @@ public class SimpleTableSorter {
 		}
 		return 0;
 	}
+
 }

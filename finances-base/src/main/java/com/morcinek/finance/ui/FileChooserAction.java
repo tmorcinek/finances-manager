@@ -4,6 +4,7 @@ import java.awt.Component;
 import java.awt.event.ActionEvent;
 import java.io.File;
 import java.io.IOException;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -14,6 +15,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 
 import com.morcinek.finance.data.Payment;
+import com.morcinek.finance.database.DBHelper;
 import com.morcinek.finance.parse.HistoryParsing;
 import com.morcinek.finance.ui.table.ListTableActionListener;
 import com.morcinek.finance.ui.table.model.ListTableModel;
@@ -51,6 +53,10 @@ public class FileChooserAction extends ListTableActionListener {
 
 	@Autowired(required = true)
 	private HistoryParsing historyParsing;
+	
+	
+	@Autowired(required = true)
+	private DBHelper dbHelper;
 
 	public FileChooserAction() {
 		fileChooser.setFileFilter(csvFileFilter);
@@ -71,6 +77,12 @@ public class FileChooserAction extends ListTableActionListener {
 				e1.printStackTrace();
 			}
 			List<Payment> payments = historyParsing.getPayments();
+			try {
+				dbHelper.addPayments(payments);
+				payments = dbHelper.getPayments();
+			} catch (SQLException e1) {
+				e1.printStackTrace();
+			}
 			((ListTableModel) tableModel).setData(new ArrayList<List<?>>(payments));
 			tableModel.fireTableStructureChanged();
 

@@ -3,7 +3,7 @@ package com.morcinek.finance.ui.table.model;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import com.morcinek.finance.ui.table.SimpleTableSorter;
+import com.morcinek.finance.ui.table.sorting.SimpleTableSorter;
 
 /**
  * SortableTableModel is a class which provides Table Model for List of Lists,

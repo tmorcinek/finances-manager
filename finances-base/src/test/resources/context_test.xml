@@ -10,63 +10,7 @@ http://www.springframework.org/schema/context/spring-context-3.0.xsd">
 
 	<context:component-scan base-package="com.morcinek.finance" />
 
-	<bean id="mainFrame" class="com.morcinek.finance.ui.MainFrame"
-		init-method="init">
-		<property name="title">
-			<value>My finance Manager</value>
-		</property>
-		<property name="contentPane">
-			<ref bean="mainPanel" />
-		</property>
-	</bean>
-	<bean id="mainPanel" class="com.morcinek.finance.ui.BoxLayoutPanel"
-		init-method="init">
-		<property name="axis">
-			<value>1</value>
-		</property>
-		<property name="panelComponents">
-			<list>
-				<bean id="itemScrollPane" class="javax.swing.JScrollPane">
-					<constructor-arg>
-						<ref bean="sortableTable" />
-					</constructor-arg>
-				</bean>
-				<bean id="buttonPanel" class="com.morcinek.finance.ui.BoxLayoutPanel"
-					init-method="init">
-					<property name="axis">
-						<!-- "0" corresponds to BoxLayout.X_AXIS -->
-						<value>0</value>
-					</property>
-					<property name="panelComponents">
-						<list>
-							<!-- <ref bean="deleteButton" /> -->
-							<!-- <ref bean="addNewButton" /> -->
-							<ref bean="testButton" />
-						</list>
-					</property>
-				</bean>
-			</list>
-		</property>
-	</bean>
-	
-	<bean id="sortableTable" class="com.morcinek.finance.ui.table.SortableTable">
-		<property name="model">
-			<ref bean="sortableTableModel" />
-		</property>
-	</bean>
-	<bean id="testButton" class="com.morcinek.finance.ui.action.BaseButton">
-		<constructor-arg>
-			<value>Title2</value>
-		</constructor-arg>
-		<constructor-arg>
-			<ref bean="fileChooserAction" />
-		</constructor-arg>
-	</bean>
-	<bean id="fileChooserAction" class="com.morcinek.finance.ui.FileChooserAction">
-		<property name="tableModel">
-			<ref bean="sortableTableModel" />
-		</property>
-	</bean>
+<!-- 			<ref bean="sortableTableModel" /> -->
 	<bean id="parsers" class="java.util.ArrayList">
 		<constructor-arg>
 			<list value-type="java.lang.String">
@@ -90,10 +34,9 @@ http://www.springframework.org/schema/context/spring-context-3.0.xsd">
 		</property>
 	</bean>
 	
-	<!-- 	database beans -->
+		<!-- 	database beans -->
 <!-- 	<bean id="dbHelper" class="com.morcinek.finance.database.DBHelper"> -->
 <!-- 	</bean> -->
-	
 </beans>
 
 
