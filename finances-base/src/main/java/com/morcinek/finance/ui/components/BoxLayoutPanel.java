@@ -1,4 +1,4 @@
-package com.morcinek.finance.ui;
+package com.morcinek.finance.ui.components;
 
 import java.awt.Component;
 import java.util.Iterator;

@@ -19,19 +19,42 @@ http://www.springframework.org/schema/context/spring-context-3.0.xsd">
 			<ref bean="mainPanel" />
 		</property>
 	</bean>
-	<bean id="mainPanel" class="com.morcinek.finance.ui.BoxLayoutPanel"
+	<bean id="mainPanel" class="com.morcinek.finance.ui.components.BoxLayoutPanel"
 		init-method="init">
 		<property name="axis">
 			<value>1</value>
 		</property>
 		<property name="panelComponents">
 			<list>
+				<bean id="northPanel" class="com.morcinek.finance.ui.components.BoxLayoutPanel"
+					init-method="init">
+					<property name="axis">
+						<value>0</value>
+					</property>
+					<property name="panelComponents">
+						<list>
+							<!-- <ref bean="deleteButton" /> -->
+							<!-- <ref bean="addNewButton" /> -->
+							<bean id="searchPanel" class="com.morcinek.finance.ui.components.SearchPanel" >
+								<constructor-arg>
+									<value>Title2</value>
+								</constructor-arg>
+								<property name="actionListener">
+									<ref bean="searchListener" />
+								</property>
+								<property name="caretListener">
+									<ref bean="searchListener" />
+								</property>
+							</bean>
+						</list>
+					</property>
+				</bean>
 				<bean id="itemScrollPane" class="javax.swing.JScrollPane">
 					<constructor-arg>
 						<ref bean="sortableTable" />
 					</constructor-arg>
 				</bean>
-				<bean id="buttonPanel" class="com.morcinek.finance.ui.BoxLayoutPanel"
+				<bean id="southPanel" class="com.morcinek.finance.ui.components.BoxLayoutPanel"
 					init-method="init">
 					<property name="axis">
 						<!-- "0" corresponds to BoxLayout.X_AXIS -->
@@ -54,7 +77,7 @@ http://www.springframework.org/schema/context/spring-context-3.0.xsd">
 			<ref bean="sortableTableModel" />
 		</property>
 	</bean>
-	<bean id="testButton" class="com.morcinek.finance.ui.action.BaseButton">
+	<bean id="testButton" class="com.morcinek.finance.ui.components.BaseButton">
 		<constructor-arg>
 			<value>Title2</value>
 		</constructor-arg>
@@ -62,7 +85,7 @@ http://www.springframework.org/schema/context/spring-context-3.0.xsd">
 			<ref bean="fileChooserAction" />
 		</constructor-arg>
 	</bean>
-	<bean id="fileChooserAction" class="com.morcinek.finance.ui.FileChooserAction">
+	<bean id="fileChooserAction" class="com.morcinek.finance.ui.action.FileChooserAction">
 		<property name="tableModel">
 			<ref bean="sortableTableModel" />
 		</property>

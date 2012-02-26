@@ -1,4 +1,4 @@
-package com.morcinek.finance.ui;
+package com.morcinek.finance.ui.action;
 
 import java.awt.Component;
 import java.awt.event.ActionEvent;
@@ -17,7 +17,6 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import com.morcinek.finance.data.Payment;
 import com.morcinek.finance.database.DBHelper;
 import com.morcinek.finance.parse.HistoryParsing;
-import com.morcinek.finance.ui.table.ListTableActionListener;
 import com.morcinek.finance.ui.table.model.ListTableModel;
 
 /**

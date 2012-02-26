@@ -1,5 +1,6 @@
 package com.morcinek.finance.database;
 
+import java.math.BigInteger;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
@@ -8,6 +9,7 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.sql.Timestamp;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import javax.annotation.PreDestroy;
@@ -67,16 +69,26 @@ public class DBHelper {
 		Statement stat = connection.createStatement();
 		ResultSet rs = stat.executeQuery("select * from payments;");
 		while (rs.next()) {
-			List<Object> objects = new ArrayList<Object>();
-			for (int i = 0; i < PAYMENTS_COLUMNS; i++) {
-				Object object = rs.getObject(i + 1);
-				objects.add(object);
-			}
-			payments.add(new Payment(objects.toArray()));
+			payments.add(getPaymentFromResultSet(rs));
 		}
 		rs.close();
 		stat.close();
 		return payments;
+	}
+
+	private Payment getPaymentFromResultSet(ResultSet resultSet) throws SQLException {
+		Date bookingDate = resultSet.getTimestamp(1);
+		Date realizingDate = resultSet.getTimestamp(2);
+		Double amount = resultSet.getDouble(3);
+		String currency = resultSet.getString(4);
+		String account = resultSet.getString(5);
+		String bankName = resultSet.getString(6);
+		String recepient = resultSet.getString(7);
+		String title = resultSet.getString(8);
+		BigInteger transactionNumber = new BigInteger(resultSet.getString(9));
+		String additionalInformations = resultSet.getString(10);
+		return new Payment(bookingDate, realizingDate, amount, currency, account, bankName, recepient, title,
+				transactionNumber, additionalInformations);
 	}
 
 	public void addPayment(Payment payment) throws SQLException {

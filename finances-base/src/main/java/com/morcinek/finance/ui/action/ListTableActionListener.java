@@ -1,4 +1,4 @@
-package com.morcinek.finance.ui.table;
+package com.morcinek.finance.ui.action;
 
 import java.awt.event.ActionListener;
 
