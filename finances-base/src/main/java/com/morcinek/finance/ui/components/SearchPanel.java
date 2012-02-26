@@ -30,14 +30,11 @@ public class SearchPanel extends JPanel {
 		add(textField);
 		baseButton = new BaseButton("Search");
 		add(baseButton);
-		
-	}
-	
-	@Override
-	public Dimension getSize() {
-		Dimension dimension = super.getSize();
-		dimension.height = baseButton.getPreferredSize().height;
-		return dimension;
+
+		Dimension preferredSize = getPreferredSize();
+		preferredSize.width = getMaximumSize().width;
+		setMinimumSize(preferredSize);
+		setMaximumSize(preferredSize);
 	}
 
 	@Autowired

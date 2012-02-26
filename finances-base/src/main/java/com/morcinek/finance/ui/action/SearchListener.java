@@ -1,30 +1,70 @@
 package com.morcinek.finance.ui.action;
 
 import java.awt.event.ActionEvent;
+import java.util.EventObject;
 
+import javax.swing.JTable;
+import javax.swing.JTextField;
+import javax.swing.RowFilter;
 import javax.swing.event.CaretEvent;
 import javax.swing.event.CaretListener;
+import javax.swing.table.TableModel;
+import javax.swing.table.TableRowSorter;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import com.morcinek.finance.data.PaymentAdapter;
 
-
 @Component
 public class SearchListener extends ListTableActionListener implements CaretListener {
 
-	@Autowired(required=true)
+	@Autowired(required = true)
 	private PaymentAdapter paymentAdapter;
-	
+
+	@Autowired(required = true)
+	private JTable table;
+
+	protected TableRowSorter<TableModel> getTableRowSorter() {
+		return (TableRowSorter<TableModel>) table.getRowSorter();
+	}
+
 	@Override
 	public void caretUpdate(CaretEvent e) {
-		System.out.println("SearchListener.caretUpdate()");
+		String text = getText(e);
+		if (!text.isEmpty()) {
+			filter(text);
+		}
 	}
 
 	@Override
 	public void actionPerformed(ActionEvent e) {
-		System.out.println("SearchListener.actionPerformed()");
+		String text = getText(e);
+		if (!text.isEmpty()) {
+			filter(text);
+		}
 	}
 
+	private static String getText(EventObject e) {
+		return ((JTextField) e.getSource()).getText();
+	}
+
+	/**
+	 * Update the row filter regular expression from the expression in the text
+	 * box.
+	 */
+	private void filter(String mask) {
+		RowFilter<TableModel, Object> rf = null;
+		try {
+			StringBuilder sb = new StringBuilder();
+			for (int i = 0; i < mask.length(); i++) {
+				char c = mask.charAt(i);
+				sb.append('[').append(Character.toLowerCase(c)).append(Character.toUpperCase(c)).append(']');
+			}
+			rf = RowFilter.regexFilter(sb.toString());
+		} catch (java.util.regex.PatternSyntaxException e) {
+			return;
+		}
+		getTableRowSorter().setRowFilter(rf);
+	}
 }
