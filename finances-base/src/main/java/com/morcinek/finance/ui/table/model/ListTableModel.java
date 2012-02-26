@@ -5,8 +5,6 @@ import java.util.List;
 
 import javax.swing.table.AbstractTableModel;
 
-import org.springframework.stereotype.Component;
-
 /**
  * ListTableModel is a class which provides Table Model for List of Lists.
  * 
@@ -15,7 +13,7 @@ import org.springframework.stereotype.Component;
  * @time 01:44:42
  * 
  */
-@Component
+//@Component
 public class ListTableModel extends AbstractTableModel {
 
 	/**
