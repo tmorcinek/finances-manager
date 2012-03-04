@@ -1,8 +1,9 @@
 package com.morcinek.finance.parse.objects;
 
+import com.morcinek.finance.Prioritised;
 import com.morcinek.finance.parse.exceptions.IncompatibleFormatException;
 
-public abstract class ObjectParser {
+public abstract class ObjectParser implements Prioritised {
 
 	public static final String DATE = "DATE";
 	public static final String AMOUNT = "AMOUNT";
@@ -33,11 +34,4 @@ public abstract class ObjectParser {
 	 */
 	public abstract Object getValueType();
 
-	/**
-	 * @return (int) Priority of the parser in parsers queue. The highest
-	 *         priority parser will be picked up at first. Parser with priority
-	 *         0 (which is now <code>DefaultParser</code>) will be on the last
-	 *         position to check.
-	 */
-	public abstract int getPriority();
 }

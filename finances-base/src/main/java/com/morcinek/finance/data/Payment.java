@@ -4,6 +4,7 @@ import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
+import java.util.List;
 
 public class Payment extends ArrayList<Object> {
 
@@ -18,10 +19,14 @@ public class Payment extends ArrayList<Object> {
 	private String currency;
 	private String account;
 	private String bankName;
-	private String recepient;
+	private String recipient;
 	private String title;
 	private BigInteger transactionNumber;
 	private String additionalInformations;
+
+	private int paymentId = -1;
+	
+	private List<Category> categories;
 
 	public Payment(Object... values) {
 		super(Arrays.asList(values));
@@ -32,7 +37,7 @@ public class Payment extends ArrayList<Object> {
 		account = (String) values[4];
 		bankName = (String) values[5];
 		title = (String) values[6];
-		recepient = (String) values[7];
+		recipient = (String) values[7];
 		transactionNumber = (BigInteger) values[8];
 		additionalInformations = (String) values[9];
 	}
@@ -93,12 +98,12 @@ public class Payment extends ArrayList<Object> {
 		this.title = title;
 	}
 
-	public String getRecepient() {
-		return recepient;
+	public String getRecipient() {
+		return recipient;
 	}
 
-	public void setRecepient(String recepient) {
-		this.recepient = recepient;
+	public void setRecipient(String recipient) {
+		this.recipient = recipient;
 	}
 
 	public BigInteger getTransactionNumber() {
@@ -116,4 +121,19 @@ public class Payment extends ArrayList<Object> {
 	public void setAdditionalInformations(String additionalInformations) {
 		this.additionalInformations = additionalInformations;
 	}
+	
+	public void setPaymentId(int pPaymentId){
+		paymentId = pPaymentId;
+	}
+
+	public int getPaymentId() {
+		return paymentId;
+	}
+
+//	public List<Category> getCategories() {
+//		if(categories == null && paymentId != -1){
+//			
+//		}
+//		return categories;
+//	}
 }

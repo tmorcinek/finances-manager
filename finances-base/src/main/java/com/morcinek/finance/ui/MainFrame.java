@@ -2,13 +2,16 @@ package com.morcinek.finance.ui;
 
 import java.awt.Dimension;
 import java.awt.Frame;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 
 import javax.swing.JFrame;
 import javax.swing.WindowConstants;
 
-public class MainFrame extends JFrame implements ActionListener {
+public class MainFrame extends JFrame {
+
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -6495334265152708685L;
 
 	public void init() {
 		setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
@@ -18,9 +21,4 @@ public class MainFrame extends JFrame implements ActionListener {
 		setVisible(true);
 	}
 
-	@Override
-	public void actionPerformed(ActionEvent e) {
-		System.out.println("jestem w action listenerze.");
-	}
-	
 }

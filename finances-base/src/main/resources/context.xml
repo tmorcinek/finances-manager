@@ -33,9 +33,9 @@ http://www.springframework.org/schema/context/spring-context-3.0.xsd">
 					</property>
 					<property name="panelComponents">
 						<list>
-<!-- 							<ref bean="deleteButton" /> -->
-<!-- 							<ref bean="addNewButton" /> -->
-							<bean id="searchPanel" class="com.morcinek.finance.ui.components.SearchPanel" >
+							<!-- <ref bean="deleteButton" /> -->
+							<!-- <ref bean="addNewButton" /> -->
+							<bean id="searchPanel" class="com.morcinek.finance.ui.components.SearchPanel">
 								<constructor-arg>
 									<value>Title2</value>
 								</constructor-arg>
@@ -71,24 +71,32 @@ http://www.springframework.org/schema/context/spring-context-3.0.xsd">
 			</list>
 		</property>
 	</bean>
-	
-	<bean id="baseTable" class="com.morcinek.finance.ui.table.BaseTable" init-method="init">
+
+	<bean id="baseTable" class="com.morcinek.finance.ui.table.BaseTable"
+		init-method="init">
 		<property name="model">
 			<ref bean="listTableModel" />
 		</property>
 		<property name="autoCreateRowSorter">
 			<value>true</value>
 		</property>
+		<property name="rowRenderers">
+			<list>
+				<ref bean="incomeRowRenderer" />
+				<ref bean="simpleRowRenderer" />
+			</list>
+		</property>
 	</bean>
 	<bean id="testButton" class="com.morcinek.finance.ui.components.BaseButton">
 		<constructor-arg>
-			<value>Title2</value>
+			<value>Wczytaj</value>
 		</constructor-arg>
 		<constructor-arg>
 			<ref bean="fileChooserAction" />
 		</constructor-arg>
 	</bean>
-	<bean id="fileChooserAction" class="com.morcinek.finance.ui.action.FileChooserAction">
+	<bean id="fileChooserAction" class="com.morcinek.finance.ui.action.FileChooserAction"
+		init-method="init">
 		<property name="tableModel">
 			<ref bean="listTableModel" />
 		</property>
@@ -115,11 +123,22 @@ http://www.springframework.org/schema/context/spring-context-3.0.xsd">
 			<ref bean="parsers" />
 		</property>
 	</bean>
-	
-	<!-- 	database beans -->
-<!-- 	<bean id="dbHelper" class="com.morcinek.finance.database.DBHelper"> -->
-<!-- 	</bean> -->
-	
+	<bean id="propertiesAdapter" class="com.morcinek.finance.util.PropertiesAdapter">
+		<property name="propertiesFiles">
+			<list>
+				<value>application.properties</value>
+				<value>features.properties</value>
+			</list>
+		</property>
+	</bean>
+
+	<bean id="sqlSentencesAdapter" class="com.morcinek.finance.util.SQLSentencesAdapter">
+		<property name="sqlFiles">
+			<list>
+				<value>database.sql</value>
+			</list>
+		</property>
+	</bean>
 </beans>
 
 

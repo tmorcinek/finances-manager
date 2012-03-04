@@ -1,9 +1,7 @@
 package com.morcinek.finance.data;
 
-import org.springframework.stereotype.Component;
 
-@Component
-public class PaymentAdapter {
+public class PaymentHelper {
 
 	/**
 	 * Checks if any field of <code>Payment</code> object contains given
@@ -19,7 +17,7 @@ public class PaymentAdapter {
 	 *         field, <b>false</b> if there is no match found in
 	 *         <code>Payment</code> object.
 	 */
-	public boolean findMatch(Payment payment, String match) {
+	public static boolean findMatch(Payment payment, String match) {
 		for (Object object : payment) {
 			if (object.toString().contains(match)) {
 				return true;
@@ -28,4 +26,14 @@ public class PaymentAdapter {
 		return false;
 	}
 
+	/**
+	 * Checks if <code>amount</code> field is positive.
+	 * 
+	 * @param payment
+	 * @return <b>true</b> if <code>amount</code> value is positive,
+	 *         <b>false</b> otherwise.
+	 */
+	public static boolean isIncome(Payment payment) {
+		return payment.getAmount() > 0;
+	}
 }

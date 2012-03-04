@@ -2,6 +2,7 @@ package com.morcinek.finance.ui.action;
 
 import java.awt.event.ActionEvent;
 import java.util.EventObject;
+import java.util.regex.PatternSyntaxException;
 
 import javax.swing.JTable;
 import javax.swing.JTextField;
@@ -14,13 +15,8 @@ import javax.swing.table.TableRowSorter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import com.morcinek.finance.data.PaymentAdapter;
-
 @Component
 public class SearchListener extends ListTableActionListener implements CaretListener {
-
-	@Autowired(required = true)
-	private PaymentAdapter paymentAdapter;
 
 	@Autowired(required = true)
 	private JTable table;
@@ -34,6 +30,8 @@ public class SearchListener extends ListTableActionListener implements CaretList
 		String text = getText(e);
 		if (!text.isEmpty()) {
 			filter(text);
+		} else {
+			getTableRowSorter().setRowFilter(null);
 		}
 	}
 
@@ -42,6 +40,8 @@ public class SearchListener extends ListTableActionListener implements CaretList
 		String text = getText(e);
 		if (!text.isEmpty()) {
 			filter(text);
+		} else {
+			getTableRowSorter().setRowFilter(null);
 		}
 	}
 
@@ -62,7 +62,7 @@ public class SearchListener extends ListTableActionListener implements CaretList
 				sb.append('[').append(Character.toLowerCase(c)).append(Character.toUpperCase(c)).append(']');
 			}
 			rf = RowFilter.regexFilter(sb.toString());
-		} catch (java.util.regex.PatternSyntaxException e) {
+		} catch (PatternSyntaxException e) {
 			return;
 		}
 		getTableRowSorter().setRowFilter(rf);

@@ -62,6 +62,25 @@ public class FileChooserAction extends ListTableActionListener {
 		fileChooser.setCurrentDirectory(new File(
 				"c:/workspaces/finance_manager/finance-base/src/main/resources/history/"));
 	}
+	
+	public void init(){
+		try {
+			historyParsing.process("c:/workspaces/finance_manager/finance-base/src/main/resources/history/historia.csv");
+		} catch (IOException e1) {
+			e1.printStackTrace();
+		}
+		List<Payment> payments = historyParsing.getPayments();
+		List<String> headers = historyParsing.getHeaders();
+		try {
+			dbHelper.addPayments(payments);
+			payments = dbHelper.getPayments();
+		} catch (SQLException e1) {
+			e1.printStackTrace();
+		}
+		tableModel.setData(new ArrayList<List<?>>(payments));
+		tableModel.setHeader(headers);
+		tableModel.fireTableStructureChanged();
+	}
 
 	@Override
 	public void actionPerformed(ActionEvent e) {

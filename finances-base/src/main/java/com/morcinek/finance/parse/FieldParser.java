@@ -1,14 +1,14 @@
 package com.morcinek.finance.parse;
 
-import java.util.Comparator;
 import java.util.List;
+import java.util.Set;
 import java.util.SortedSet;
-import java.util.TreeSet;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
 
+import com.morcinek.finance.PrioritisedSet;
 import com.morcinek.finance.parse.exceptions.IncompatibleFormatException;
 import com.morcinek.finance.parse.objects.ObjectParser;
 
@@ -26,6 +26,9 @@ public class FieldParser {
 			registerParser(packageName.concat(".").concat(parserName));
 		}
 	}
+
+	@SuppressWarnings({ "rawtypes", "unchecked" })
+	private SortedSet<ObjectParser> priorityQueue = new PrioritisedSet();
 
 	public void registerParser(String objectParserName) {
 		try {
@@ -72,11 +75,7 @@ public class FieldParser {
 		return null;
 	}
 
-	private SortedSet<ObjectParser> priorityQueue = new TreeSet<ObjectParser>(new Comparator<ObjectParser>() {
-		@Override
-		public int compare(ObjectParser o1, ObjectParser o2) {
-			return new Integer(o2.getPriority()).compareTo(o1.getPriority());
-		}
-	});
-
+	public Set<ObjectParser> getObjectParsers() {
+		return priorityQueue;
+	}
 }
