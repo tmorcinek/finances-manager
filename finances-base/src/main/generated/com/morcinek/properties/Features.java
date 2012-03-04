@@ -6,7 +6,10 @@ public class Features {
 
 	/* PLEASE DO NOT MODIFY THIS FILE MANUALLY !!! */
 
-	public static final  boolean hasEditingFunctionality = true;
+	public static final  String database_subname = "test";
+	public static final  boolean paymentDialog_resizable = false;
+	public static final  boolean hasComments = true;
 	public static final  String applicationName = "Finance Manager";
-	public static final  int numberCount = 329;
+	public static final  String database_subprotocol = "sqlite";
+	public static final  boolean hasTags = true;
 }
