@@ -40,7 +40,7 @@ public class SearchPanel extends JPanel {
 	@Autowired
 	public void setActionListener(ActionListener actionListener) {
 		textField.addActionListener(actionListener);
-		baseButton.addActionListener(actionListener);
+//		baseButton.addActionListener(actionListener);
 	}
 
 	@Autowired

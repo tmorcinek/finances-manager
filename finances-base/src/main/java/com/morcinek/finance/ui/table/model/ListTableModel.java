@@ -1,5 +1,6 @@
 package com.morcinek.finance.ui.table.model;
 
+import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -25,9 +26,15 @@ public class ListTableModel extends AbstractTableModel {
 
 	private List<List<?>> data = new LinkedList<List<?>>();
 
+	private List<String> header;
+
 	public void setData(List<List<?>> pData) {
 		data.clear();
 		data.addAll(pData);
+	}
+
+	public void setHeader(List<String> pHeader) {
+		header = pHeader;
 	}
 
 	@Override
@@ -55,6 +62,9 @@ public class ListTableModel extends AbstractTableModel {
 
 	@Override
 	public String getColumnName(int column) {
+		if (header != null) {
+			return header.get(column);
+		}
 		return super.getColumnName(column);
 	}
 
@@ -68,6 +78,10 @@ public class ListTableModel extends AbstractTableModel {
 
 	public List<List<?>> getData() {
 		return data;
+	}
+
+	public List<?> getRowAt(int rowIndex) {
+		return data.get(rowIndex);
 	}
 
 }

@@ -4,6 +4,7 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,9 +19,11 @@ public class HistoryParsing {
 
 	private FieldParser fieldParser;
 
-	private List<String> headerList = new ArrayList<String>();
+	private List<String> comments = new ArrayList<String>();
 
 	private List<Payment> payments = new ArrayList<Payment>();
+
+	private List<String> headers = new ArrayList<String>();
 
 	@Autowired(required = true)
 	public HistoryParsing(FieldParser pFieldParser) {
@@ -45,14 +48,14 @@ public class HistoryParsing {
 		payments.clear();
 		for (String[] data : parsedData) {
 			if (data.length == 1) {
-				headerList.add(data[0]);
+				comments.add(data[0]);
 			} else if (data.length > 1) {
 				Payment payment;
 				try {
 					payment = processPaymentData(data);
 					payments.add(payment);
 				} catch (Exception e) {
-					e.printStackTrace();
+					headers.addAll(Arrays.asList(data));
 				}
 			}
 		}
@@ -66,8 +69,12 @@ public class HistoryParsing {
 		return new Payment(objects);
 	}
 
-	public List<String> getHeaderList() {
-		return headerList;
+	public List<String> getHeaders() {
+		return headers;
+	}
+
+	public List<String> getComments() {
+		return comments;
 	}
 
 	public List<Payment> getPayments() {
