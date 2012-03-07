@@ -1,4 +1,4 @@
-package com.morcinek.finance.data;
+package com.morcinek.finance.database;
 
 import java.math.BigInteger;
 import java.util.ArrayList;
