@@ -11,7 +11,6 @@ import org.junit.Before;
 import org.junit.Test;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 
-import com.morcinek.finance.data.Payment;
 
 public class DBHelperTest {
 
