@@ -1,4 +1,4 @@
-package com.morcinek.finance.data;
+package com.morcinek.finance.database;
 
 
 public class PaymentHelper {
