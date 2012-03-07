@@ -1,6 +1,7 @@
 package com.morcinek.finance.ui.action;
 
 import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.util.EventObject;
 import java.util.regex.PatternSyntaxException;
 
@@ -16,11 +17,16 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 @Component
-public class SearchListener extends ListTableActionListener implements CaretListener {
+public class SearchListener implements ActionListener, CaretListener {
 
-	@Autowired(required = true)
 	private JTable table;
 
+	@Autowired
+	public void setTable(JTable table) {
+		this.table = table;
+	}
+
+	@SuppressWarnings("unchecked")
 	protected TableRowSorter<TableModel> getTableRowSorter() {
 		return (TableRowSorter<TableModel>) table.getRowSorter();
 	}

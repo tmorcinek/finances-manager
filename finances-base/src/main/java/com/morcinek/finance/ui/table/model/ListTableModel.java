@@ -1,11 +1,11 @@
 package com.morcinek.finance.ui.table.model;
 
-import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 
 import javax.swing.table.AbstractTableModel;
 
+import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
 /**
@@ -17,6 +17,7 @@ import org.springframework.stereotype.Component;
  * 
  */
 @Component
+@Scope("prototype")
 public class ListTableModel extends AbstractTableModel {
 
 	/**
@@ -28,9 +29,17 @@ public class ListTableModel extends AbstractTableModel {
 
 	private List<String> header;
 
-	public void setData(List<List<?>> pData) {
+	private int count;
+
+	public void clear() {
 		data.clear();
+	}
+
+	public void setData(List<List<?>> pData) {
 		data.addAll(pData);
+		for (List<?> list : pData) {
+			count = Math.max(count, list.size());
+		}
 	}
 
 	public void setHeader(List<String> pHeader) {
@@ -44,15 +53,16 @@ public class ListTableModel extends AbstractTableModel {
 
 	@Override
 	public int getColumnCount() {
-		if (data.size() > 0) {
-			return data.get(0).size();
-		}
-		return 0;
+		return count;
 	}
 
 	@Override
 	public Object getValueAt(int rowIndex, int columnIndex) {
-		return data.get(rowIndex).get(columnIndex);
+		List<?> rowData = data.get(rowIndex);
+		if (rowData.size() > columnIndex) {
+			return rowData.get(columnIndex);
+		}
+		return null;
 	}
 
 	@Override
@@ -69,11 +79,12 @@ public class ListTableModel extends AbstractTableModel {
 	}
 
 	@Override
-	public Class<?> getColumnClass(int column) {
-		if (data.size() > 0) {
-			return data.get(0).get(column).getClass();
+	public Class<?> getColumnClass(int columnIndex) {
+		List<?> rowData = data.get(0);
+		if (rowData.size() > columnIndex) {
+			return rowData.get(columnIndex).getClass();
 		}
-		return super.getColumnClass(column);
+		return super.getColumnClass(columnIndex);
 	}
 
 	public List<List<?>> getData() {

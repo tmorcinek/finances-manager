@@ -2,22 +2,25 @@ package com.morcinek.finance.ui.action;
 
 import java.awt.Component;
 import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.io.File;
 import java.io.IOException;
-import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.swing.JDialog;
 import javax.swing.JFileChooser;
+import javax.swing.WindowConstants;
 import javax.swing.filechooser.FileFilter;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 
-import com.morcinek.finance.data.Payment;
-import com.morcinek.finance.database.DBHelper;
 import com.morcinek.finance.parse.HistoryParsing;
+import com.morcinek.finance.ui.table.BaseTable;
 import com.morcinek.finance.ui.table.model.ListTableModel;
+import com.morcinek.finance.util.ApplicationContextProvider;
+import com.morcinek.finance.util.PropertiesAdapter;
 
 /**
  * FileChooserAction is an implementation of ActionListener after clicking
@@ -29,7 +32,8 @@ import com.morcinek.finance.ui.table.model.ListTableModel;
  * @time 02:43:25
  * 
  */
-public class FileChooserAction extends ListTableActionListener {
+@org.springframework.stereotype.Component
+public class FileChooserAction implements ActionListener {
 
 	private FileFilter csvFileFilter = new FileFilter() {
 
@@ -48,38 +52,16 @@ public class FileChooserAction extends ListTableActionListener {
 	@Qualifier("mainFrame")
 	private Component parent;
 
-	private JFileChooser fileChooser = new JFileChooser();
-
 	@Autowired(required = true)
 	private HistoryParsing historyParsing;
 	
+	private JFileChooser fileChooser = new JFileChooser();
 	
-	@Autowired(required = true)
-	private DBHelper dbHelper;
-
-	public FileChooserAction() {
+	@Autowired
+	public FileChooserAction(PropertiesAdapter propertiesAdapter) {
 		fileChooser.setFileFilter(csvFileFilter);
 		fileChooser.setCurrentDirectory(new File(
-				"c:/workspaces/finance_manager/finance-base/src/main/resources/history/"));
-	}
-	
-	public void init(){
-		try {
-			historyParsing.process("c:/workspaces/finance_manager/finance-base/src/main/resources/history/historia.csv");
-		} catch (IOException e1) {
-			e1.printStackTrace();
-		}
-		List<Payment> payments = historyParsing.getPayments();
-		List<String> headers = historyParsing.getHeaders();
-		try {
-			dbHelper.addPayments(payments);
-			payments = dbHelper.getPayments();
-		} catch (SQLException e1) {
-			e1.printStackTrace();
-		}
-		tableModel.setData(new ArrayList<List<?>>(payments));
-		tableModel.setHeader(headers);
-		tableModel.fireTableStructureChanged();
+				propertiesAdapter.getProperty("fileChooser_defaultPath")));
 	}
 
 	@Override
@@ -94,16 +76,16 @@ public class FileChooserAction extends ListTableActionListener {
 			} catch (IOException e1) {
 				e1.printStackTrace();
 			}
-			List<Payment> payments = historyParsing.getPayments();
-			try {
-				dbHelper.addPayments(payments);
-				payments = dbHelper.getPayments();
-			} catch (SQLException e1) {
-				e1.printStackTrace();
-			}
-			((ListTableModel) tableModel).setData(new ArrayList<List<?>>(payments));
+			JDialog dialog = (JDialog) ApplicationContextProvider.getApplicationContext().getBean("mergeDialog");
+			BaseTable mergeTable = (BaseTable) ApplicationContextProvider.getApplicationContext().getBean("mergeTable");
+			ListTableModel tableModel = mergeTable.getListTableModel();
+			tableModel.clear();
+			tableModel.setData(historyParsing.getNonPayments());
+			tableModel.setData(new ArrayList<List<?>>(historyParsing.getPayments()));
 			tableModel.fireTableStructureChanged();
-
+			dialog.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
+			dialog.pack();
+			dialog.setVisible(true);
 		}
 	}
 
