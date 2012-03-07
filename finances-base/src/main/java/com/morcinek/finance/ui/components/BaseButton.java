@@ -15,13 +15,9 @@ public class BaseButton extends JButton {
 		super();
 	}
 
-	public BaseButton(String text) {
-		super(text);
-	}
-
-	public BaseButton(String text, ActionListener actionListener) {
-		super(text);
-		addActionListener(actionListener);
+	public BaseButton(String name) {
+		super();
+		setName(name);
 	}
 
 	public void setActionListener(ActionListener l) {

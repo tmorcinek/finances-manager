@@ -20,16 +20,12 @@ public class SearchPanel extends JPanel {
 
 	private JTextField textField;
 
-	private BaseButton baseButton;
-
 	public SearchPanel(String text) {
 		super();
 		setLayout(new BoxLayout(this, BoxLayout.X_AXIS));
 		add(new Label(text));
 		textField = new JTextField();
 		add(textField);
-		baseButton = new BaseButton("Search");
-		add(baseButton);
 
 		Dimension preferredSize = getPreferredSize();
 		preferredSize.width = getMaximumSize().width;
@@ -40,7 +36,6 @@ public class SearchPanel extends JPanel {
 	@Autowired
 	public void setActionListener(ActionListener actionListener) {
 		textField.addActionListener(actionListener);
-//		baseButton.addActionListener(actionListener);
 	}
 
 	@Autowired
