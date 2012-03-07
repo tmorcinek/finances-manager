@@ -27,8 +27,7 @@ public class FieldParser {
 		}
 	}
 
-	@SuppressWarnings({ "rawtypes", "unchecked" })
-	private SortedSet<ObjectParser> priorityQueue = new PrioritisedSet();
+	private SortedSet<ObjectParser> priorityQueue = new PrioritisedSet<ObjectParser>();
 
 	public void registerParser(String objectParserName) {
 		try {

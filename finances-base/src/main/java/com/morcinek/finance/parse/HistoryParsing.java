@@ -12,18 +12,16 @@ import org.springframework.stereotype.Component;
 
 import au.com.bytecode.opencsv.CSVReader;
 
-import com.morcinek.finance.data.Payment;
+import com.morcinek.finance.database.Payment;
 
 @Component
 public class HistoryParsing {
 
 	private FieldParser fieldParser;
 
-	private List<String> comments = new ArrayList<String>();
-
 	private List<Payment> payments = new ArrayList<Payment>();
 
-	private List<String> headers = new ArrayList<String>();
+	private List<List<?>> nonPayments = new ArrayList<List<?>>();
 
 	@Autowired(required = true)
 	public HistoryParsing(FieldParser pFieldParser) {
@@ -47,15 +45,13 @@ public class HistoryParsing {
 	private void processData(List<String[]> parsedData) {
 		payments.clear();
 		for (String[] data : parsedData) {
-			if (data.length == 1) {
-				comments.add(data[0]);
-			} else if (data.length > 1) {
+			if (data.length > 0) {
 				Payment payment;
 				try {
 					payment = processPaymentData(data);
 					payments.add(payment);
 				} catch (Exception e) {
-					headers.addAll(Arrays.asList(data));
+					nonPayments.add(Arrays.asList(data));
 				}
 			}
 		}
@@ -69,16 +65,12 @@ public class HistoryParsing {
 		return new Payment(objects);
 	}
 
-	public List<String> getHeaders() {
-		return headers;
-	}
-
-	public List<String> getComments() {
-		return comments;
-	}
-
 	public List<Payment> getPayments() {
 		return payments;
+	}
+
+	public List<List<?>> getNonPayments() {
+		return nonPayments;
 	}
 
 }
