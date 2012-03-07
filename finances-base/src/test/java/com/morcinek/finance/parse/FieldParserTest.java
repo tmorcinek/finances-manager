@@ -11,7 +11,7 @@ import java.util.List;
 import org.junit.Before;
 import org.junit.Test;
 
-import com.morcinek.finance.data.Payment;
+import com.morcinek.finance.database.Payment;
 import com.morcinek.finance.parse.objects.AccountParser;
 import com.morcinek.finance.parse.objects.AmountParser;
 import com.morcinek.finance.parse.objects.CurrencyParser;
@@ -40,7 +40,6 @@ public class FieldParserTest {
 	public void historyParsingTest() throws IOException{
 		HistoryParsing historyParsing = new HistoryParsing(fieldParser);
 		historyParsing.process("src/main/resources/history/historia.csv");
-		List<String> headerList = historyParsing.getComments();
 		List<Payment> payments = historyParsing.getPayments();
 		assertTrue(true);
 	}
