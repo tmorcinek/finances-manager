@@ -1,5 +1,6 @@
 package com.morcinek.finance.util;
 
+import java.awt.Color;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.List;
@@ -125,6 +126,24 @@ public class PropertiesAdapter {
 	 */
 	public Integer getInteger(String key) throws NumberFormatException {
 		return Integer.parseInt(properties.getProperty(key));
+	}
+
+	public Color getColor(String key) {
+		String value = getProperty(key);
+		Color color = null;
+		try {
+			String digits;
+			if (value.startsWith("#")) {
+				digits = value.substring(1, Math.min(value.length(), 7));
+			} else {
+				digits = value;
+			}
+			String hstr = "0x" + digits;
+			color = Color.decode(hstr);
+		} catch (NumberFormatException e) {
+			e.printStackTrace();
+		}
+		return color;
 	}
 
 	public Set<Entry<Object, Object>> getPropertiesList() {

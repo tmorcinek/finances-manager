@@ -84,10 +84,22 @@ public class SQLSentencesAdapter {
 		return stringBuilder.toString();
 	}
 
+	/**
+	 * List of create statements for different tables. Is populated while reading <b>sql</b> file which contains all
+	 * database statements.
+	 * 
+	 * @return (List[String]) of statements which contains word: <b>create</b>.
+	 */
 	public List<String> getCreateSentences() {
 		return createSentences;
 	}
 
+	/**
+	 * List of create statements for different tables. Is populated while reading <b>sql</b> file which contains all
+	 * database statements.
+	 * 
+	 * @return (List[String]) of statements which contains word: <b>drop</b>.
+	 */
 	public List<String> getDropSentences() {
 		return dropSentences;
 	}

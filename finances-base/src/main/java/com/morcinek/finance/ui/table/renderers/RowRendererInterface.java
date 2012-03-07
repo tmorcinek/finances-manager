@@ -6,10 +6,11 @@ import com.morcinek.finance.Prioritised;
 
 public interface RowRendererInterface extends Prioritised {
 
-	public abstract boolean applies(Object row, int rowNumber);
+	public abstract boolean applies(Object row, int originalRowNumber);
 
 	public Color getBackgroundColor();
 
 	public Color getForegroundColor();
 
+	public void refresh();
 }

@@ -10,8 +10,8 @@ public class SimpleRowRenderer extends AbstractRowRenderer {
 	private int rowNumber;
 
 	@Override
-	public boolean applies(Object row, int rowNumber) {
-		this.rowNumber = rowNumber;
+	public boolean applies(Object row, int originalRowNumber) {
+		this.rowNumber = originalRowNumber;
 		return true;
 	}
 
