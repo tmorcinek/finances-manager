@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:context="http://www.springframework.org/schema/context"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans
+http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
+http://www.springframework.org/schema/context
+http://www.springframework.org/schema/context/spring-context-3.0.xsd">
+
+	<context:annotation-config />
+
+	<context:component-scan base-package="com.morcinek.finance" />
+
+	<bean id="parsers" class="java.util.ArrayList">
+		<constructor-arg>
+			<list value-type="java.lang.String">
+				<value>Default</value>
+				<value>Account</value>
+				<value>Amount</value>
+				<value>Currency</value>
+				<value>Date</value>
+				<value>Transaction</value>
+			</list>
+		</constructor-arg>
+	</bean>
+	<bean id="packageName" class="java.lang.String">
+		<constructor-arg>
+			<value>com.morcinek.finance.parse.objects</value>
+		</constructor-arg>
+	</bean>
+	<bean id="fieldParser" class="com.morcinek.finance.parse.FieldParser">
+		<property name="parsers">
+			<ref bean="parsers" />
+		</property>
+	</bean>
+	<bean id="propertiesAdapter" class="com.morcinek.finance.util.PropertiesAdapter">
+		<property name="propertiesFiles">
+			<list>
+				<value>application.properties</value>
+				<value>features.properties</value>
+			</list>
+		</property>
+	</bean>
+	<bean id="sqlSentencesAdapter" class="com.morcinek.finance.util.SQLSentencesAdapter">
+		<property name="sqlFiles">
+			<list>
+				<value>database.sql</value>
+			</list>
+		</property>
+	</bean>
+</beans>
