@@ -10,6 +10,31 @@ http://www.springframework.org/schema/context/spring-context-3.0.xsd">
 
 	<context:component-scan base-package="com.morcinek.finance" />
 
+	<import resource="services.xml" />
+
+	<!-- main frame -->
+	<bean id="mainTable" class="com.morcinek.finance.ui.table.BaseTable"
+		init-method="init">
+		<property name="model">
+			<ref bean="listTableModel" />
+		</property>
+		<property name="autoCreateRowSorter">
+			<value>true</value>
+		</property>
+		<property name="rowRenderers">
+			<list>
+				<ref bean="incomeRowRenderer" />
+				<ref bean="simpleRowRenderer" />
+			</list>
+		</property>
+		<property name="mouseListener">
+			<bean class="com.morcinek.finance.ui.action.PaymentDialogMouseListener">
+				<property name="window">
+					<ref bean="mainFrame" />
+				</property>
+			</bean>
+		</property>
+	</bean>
 	<bean id="mainFrame" class="com.morcinek.finance.ui.MainFrame"
 		init-method="init">
 		<property name="title">
@@ -17,6 +42,11 @@ http://www.springframework.org/schema/context/spring-context-3.0.xsd">
 		</property>
 		<property name="contentPane">
 			<ref bean="mainPanel" />
+		</property>
+	</bean>
+	<bean id="searchListener" class="com.morcinek.finance.ui.action.SearchListener">
+		<property name="table">
+			<ref bean="mainTable" />
 		</property>
 	</bean>
 	<bean id="mainPanel" class="com.morcinek.finance.ui.components.BoxLayoutPanel"
@@ -33,8 +63,6 @@ http://www.springframework.org/schema/context/spring-context-3.0.xsd">
 					</property>
 					<property name="panelComponents">
 						<list>
-							<!-- <ref bean="deleteButton" /> -->
-							<!-- <ref bean="addNewButton" /> -->
 							<bean id="searchPanel" class="com.morcinek.finance.ui.components.SearchPanel">
 								<constructor-arg>
 									<value>Title2</value>
@@ -51,7 +79,7 @@ http://www.springframework.org/schema/context/spring-context-3.0.xsd">
 				</bean>
 				<bean id="itemScrollPane" class="javax.swing.JScrollPane">
 					<constructor-arg>
-						<ref bean="baseTable" />
+						<ref bean="mainTable" />
 					</constructor-arg>
 				</bean>
 				<bean id="southPanel" class="com.morcinek.finance.ui.components.BoxLayoutPanel"
@@ -62,9 +90,8 @@ http://www.springframework.org/schema/context/spring-context-3.0.xsd">
 					</property>
 					<property name="panelComponents">
 						<list>
-							<!-- <ref bean="deleteButton" /> -->
-							<!-- <ref bean="addNewButton" /> -->
-							<ref bean="testButton" />
+							<ref bean="readCVSButton" />
+							<ref bean="populateTable" />
 						</list>
 					</property>
 				</bean>
@@ -72,143 +99,113 @@ http://www.springframework.org/schema/context/spring-context-3.0.xsd">
 		</property>
 	</bean>
 
-	<bean id="baseTable" class="com.morcinek.finance.ui.table.BaseTable"
+	<bean id="applicationModal" class="java.awt.Dialog.ModalityType" factory-method="valueOf">
+		<constructor-arg value="APPLICATION_MODAL" />
+	</bean>
+
+	<!-- mergeDialog -->
+	<bean id="mergeDialog" class="javax.swing.JDialog">
+		<property name="title">
+			<value>My finance Manager</value>
+		</property>
+		<property name="contentPane">
+			<ref bean="dialogPanel" />
+		</property>
+		<property name="modalityType">
+			<ref bean="applicationModal"/>
+		</property>
+	</bean>
+	<bean id="mergeTable" class="com.morcinek.finance.ui.table.BaseTable"
 		init-method="init">
 		<property name="model">
 			<ref bean="listTableModel" />
 		</property>
-		<property name="autoCreateRowSorter">
-			<value>true</value>
+		<property name="rowRenderer">
+			<ref bean="validationRowRenderer" />
 		</property>
-		<property name="rowRenderers">
-			<list>
-				<ref bean="incomeRowRenderer" />
-				<ref bean="simpleRowRenderer" />
-			</list>
+		<property name="mouseListener">
+			<bean class="com.morcinek.finance.ui.action.PaymentDialogMouseListener">
+				<property name="window">
+					<ref bean="mergeDialog" />
+				</property>
+			</bean>
 		</property>
 	</bean>
-	<bean id="testButton" class="com.morcinek.finance.ui.components.BaseButton">
-		<constructor-arg>
-			<value>Wczytaj</value>
-		</constructor-arg>
-		<constructor-arg>
-			<ref bean="fileChooserAction" />
-		</constructor-arg>
-	</bean>
-	<bean id="fileChooserAction" class="com.morcinek.finance.ui.action.FileChooserAction"
+	<bean id="dialogPanel" class="com.morcinek.finance.ui.components.BoxLayoutPanel"
 		init-method="init">
-		<property name="tableModel">
-			<ref bean="listTableModel" />
+		<property name="axis">
+			<value>1</value>
 		</property>
-	</bean>
-	<bean id="parsers" class="java.util.ArrayList">
-		<constructor-arg>
-			<list value-type="java.lang.String">
-				<value>Default</value>
-				<value>Account</value>
-				<value>Amount</value>
-				<value>Currency</value>
-				<value>Date</value>
-				<value>Transaction</value>
-			</list>
-		</constructor-arg>
-	</bean>
-	<bean id="packageName" class="java.lang.String">
-		<constructor-arg>
-			<value>com.morcinek.finance.parse.objects</value>
-		</constructor-arg>
-	</bean>
-	<bean id="fieldParser" class="com.morcinek.finance.parse.FieldParser">
-		<property name="parsers">
-			<ref bean="parsers" />
-		</property>
-	</bean>
-	<bean id="propertiesAdapter" class="com.morcinek.finance.util.PropertiesAdapter">
-		<property name="propertiesFiles">
+		<property name="panelComponents">
 			<list>
-				<value>application.properties</value>
-				<value>features.properties</value>
+				<bean class="com.morcinek.finance.ui.components.BoxLayoutPanel"
+					init-method="init">
+					<property name="axis">
+						<value>0</value>
+					</property>
+					<property name="panelComponents">
+						<list>
+							<bean class="com.morcinek.finance.ui.components.BaseButton">
+								<constructor-arg>
+									<value>update_all</value>
+								</constructor-arg>
+								<property name="text">
+									<value>Update all Payments</value>
+								</property>
+								<property name="actionListener">
+									<ref bean="mergeActionListener" />
+								</property>
+							</bean>
+							<bean class="com.morcinek.finance.ui.components.BaseButton">
+								<constructor-arg>
+									<value>update_selected</value>
+								</constructor-arg>
+								<property name="text">
+									<value>Update selected Payments</value>
+								</property>
+								<property name="actionListener">
+									<ref bean="mergeActionListener" />
+								</property>
+							</bean>
+							<bean class="com.morcinek.finance.ui.components.BaseButton">
+								<constructor-arg>
+									<value>back</value>
+								</constructor-arg>
+								<property name="text">
+									<value>Go back</value>
+								</property>
+								<property name="actionListener">
+									<ref bean="mergeActionListener" />
+								</property>
+							</bean>
+						</list>
+					</property>
+				</bean>
+				<bean class="javax.swing.JScrollPane">
+					<constructor-arg>
+						<ref bean="mergeTable" />
+					</constructor-arg>
+				</bean>
 			</list>
 		</property>
 	</bean>
-
-	<bean id="sqlSentencesAdapter" class="com.morcinek.finance.util.SQLSentencesAdapter">
-		<property name="sqlFiles">
-			<list>
-				<value>database.sql</value>
-			</list>
+	<bean id="readCVSButton" class="com.morcinek.finance.ui.components.BaseButton">
+		<property name="text">
+			<value>Wczytaj CVS</value>
+		</property>
+		<property name="actionListener">
+			<ref bean="fileChooserAction" />
+		</property>
+	</bean>
+	<bean id="populateTable" class="com.morcinek.finance.ui.components.BaseButton">
+		<constructor-arg>
+			<value>populateTable</value>
+		</constructor-arg>
+		<property name="text">
+			<value>Populate Table</value>
+		</property>
+		<property name="actionListener">
+			<ref bean="populateActionListener" />
 		</property>
 	</bean>
 </beans>
-
-
-<!-- <bean -->
-<!-- class="org.springframework.beans.factory.config.MethodInvokingFactoryBean"> -->
-<!-- <property name="targetObject"> -->
-<!-- <ref local="testButton" /> -->
-<!-- </property> -->
-<!-- <property name="targetMethod"> -->
-<!-- <value>addActionListener</value> -->
-<!-- </property> -->
-<!-- <property name="arguments"> -->
-<!-- <list> -->
-<!-- <ref bean="mainFrame" /> -->
-<!-- </list> -->
-<!-- </property> -->
-<!-- </bean> -->
-
-<!-- <bean id="deleteButton" class="com.morcinek.finance.ui.ActionListenerButton" -->
-<!-- init-method="init"> -->
-<!-- <property name="actionListener"> -->
-<!-- <ref bean="deleteButtonActionListener" /> -->
-<!-- </property> -->
-<!-- <property name="text"> -->
-<!-- <value>Delete</value> -->
-<!-- </property> -->
-<!-- </bean> -->
-<!-- <bean id="deleteButtonActionListener" -->
-<!-- class="com.morcinek.finance.ui.table.DeleteButtonActionListener"> -->
-<!-- <property name="list"> -->
-<!-- <ref bean="itemList" /> -->
-<!-- </property> -->
-<!-- <property name="table"> -->
-<!-- <ref bean="itemTable" /> -->
-<!-- </property> -->
-<!-- </bean> -->
-<!-- <bean id="addNewButton" class="com.morcinek.finance.ui.ActionListenerButton" -->
-<!-- init-method="init"> -->
-<!-- <property name="actionListener"> -->
-<!-- <ref bean="addNewButtonActionListener" /> -->
-<!-- </property> -->
-<!-- <property name="text"> -->
-<!-- <value>Add New</value> -->
-<!-- </property> -->
-<!-- </bean> -->
-<!-- <bean id="addNewButtonActionListener" -->
-<!-- class="com.morcinek.finance.ui.table.AddNewButtonActionListener"> -->
-<!-- <property name="list"> -->
-<!-- <ref bean="itemList" /> -->
-<!-- </property> -->
-<!-- <property name="table"> -->
-<!-- <ref bean="itemTable" /> -->
-<!-- </property> -->
-<!-- </bean> -->
-
-<!-- <context:annotation-config /> -->
-
-<!-- <context:component-scan base-package="com.morcinek.framework" /> -->
-
-<!-- <bean id="mainFrame" class="com.morcinek.framework.gui.MainFrame"> -->
-<!-- <property name="menuTypes"> -->
-<!-- <value>fileMenu</value> -->
-<!-- </property> -->
-<!-- </bean> -->
-
-<!-- initializing PropertiesHelper -->
-<!-- temporary disabling, nothing to do -->
-<!-- <bean id="propertiesAdapter" class="com.morcinek.manager.util.PropertiesAdapter" 
-	scope="singleton" lazy-init="true"> -->
-<!-- <constructor-arg value="resources.properties" /> -->
-<!-- </bean> -->
-<!-- <bean id="mainFram" class="com.morcinek.framework.gui.MainFrame" scope="singleton" 
-	init-method="init" ></bean> -->

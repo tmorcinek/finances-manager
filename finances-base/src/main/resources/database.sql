@@ -13,7 +13,8 @@ create table if not exists payments (
 );
 create table if not exists categories (
 	categoryId INTEGER primary key,
-	categoryName TEXT unique
+	categoryName TEXT unique,
+	parentId references categories(categoryId)
 );
 create table if not exists paymentsCategories (
 	paymentsId references payments(paymentsId),
