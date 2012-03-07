@@ -4,8 +4,8 @@ import java.awt.Color;
 
 import org.springframework.stereotype.Component;
 
-import com.morcinek.finance.data.Payment;
-import com.morcinek.finance.data.PaymentHelper;
+import com.morcinek.finance.database.Payment;
+import com.morcinek.finance.database.PaymentHelper;
 
 @Component
 public class IncomeRowRenderer extends AbstractRowRenderer {
@@ -16,7 +16,7 @@ public class IncomeRowRenderer extends AbstractRowRenderer {
 	}
 
 	@Override
-	public boolean applies(Object row, int rowNumber) {
+	public boolean applies(Object row, int originalRowNumber) {
 		Payment payment = (Payment) row;
 		return PaymentHelper.isIncome(payment);
 	}
