@@ -82,7 +82,7 @@ http://www.springframework.org/schema/context/spring-context-3.0.xsd">
 						<ref bean="mainTable" />
 					</constructor-arg>
 				</bean>
-				<bean id="southPanel" class="com.morcinek.finance.ui.components.BoxLayoutPanel"
+				<bean id="southComponent" class="com.morcinek.finance.ui.components.BoxLayoutPanel"
 					init-method="init">
 					<property name="axis">
 						<!-- "0" corresponds to BoxLayout.X_AXIS -->
@@ -99,7 +99,8 @@ http://www.springframework.org/schema/context/spring-context-3.0.xsd">
 		</property>
 	</bean>
 
-	<bean id="applicationModal" class="java.awt.Dialog.ModalityType" factory-method="valueOf">
+	<bean id="applicationModal" class="java.awt.Dialog.ModalityType"
+		factory-method="valueOf">
 		<constructor-arg value="APPLICATION_MODAL" />
 	</bean>
 
@@ -112,7 +113,7 @@ http://www.springframework.org/schema/context/spring-context-3.0.xsd">
 			<ref bean="dialogPanel" />
 		</property>
 		<property name="modalityType">
-			<ref bean="applicationModal"/>
+			<ref bean="applicationModal" />
 		</property>
 	</bean>
 	<bean id="mergeTable" class="com.morcinek.finance.ui.table.BaseTable"
@@ -146,9 +147,9 @@ http://www.springframework.org/schema/context/spring-context-3.0.xsd">
 					<property name="panelComponents">
 						<list>
 							<bean class="com.morcinek.finance.ui.components.BaseButton">
-								<constructor-arg>
+								<property name="actionCommand">
 									<value>update_all</value>
-								</constructor-arg>
+								</property>
 								<property name="text">
 									<value>Update all Payments</value>
 								</property>
@@ -157,9 +158,9 @@ http://www.springframework.org/schema/context/spring-context-3.0.xsd">
 								</property>
 							</bean>
 							<bean class="com.morcinek.finance.ui.components.BaseButton">
-								<constructor-arg>
+								<property name="actionCommand">
 									<value>update_selected</value>
-								</constructor-arg>
+								</property>
 								<property name="text">
 									<value>Update selected Payments</value>
 								</property>
@@ -168,9 +169,9 @@ http://www.springframework.org/schema/context/spring-context-3.0.xsd">
 								</property>
 							</bean>
 							<bean class="com.morcinek.finance.ui.components.BaseButton">
-								<constructor-arg>
+								<property name="actionCommand">
 									<value>back</value>
-								</constructor-arg>
+								</property>
 								<property name="text">
 									<value>Go back</value>
 								</property>
@@ -198,14 +199,116 @@ http://www.springframework.org/schema/context/spring-context-3.0.xsd">
 		</property>
 	</bean>
 	<bean id="populateTable" class="com.morcinek.finance.ui.components.BaseButton">
-		<constructor-arg>
+		<property name="actionCommand">
 			<value>populateTable</value>
-		</constructor-arg>
+		</property>
 		<property name="text">
 			<value>Populate Table</value>
 		</property>
 		<property name="actionListener">
 			<ref bean="populateActionListener" />
+		</property>
+	</bean>
+
+	<bean id="categoryTextField" class="javax.swing.JTextField">
+		<constructor-arg>
+			<value type="int">30</value>
+		</constructor-arg>
+	</bean>
+	<!-- categories dialog -->
+	<bean id="categoriesDialog" class="javax.swing.JDialog" scope="prototype">
+		<property name="title">
+			<value>Categories Dialog</value>
+		</property>
+		<property name="contentPane">
+			<bean class="com.morcinek.finance.ui.components.BorderPanel">
+				<property name="northComponent">
+					<ref bean="categoryTextField" />
+				</property>
+				<property name="southComponent">
+					<bean class="com.morcinek.finance.ui.components.BoxLayoutPanel"
+						init-method="init">
+						<property name="axis">
+							<value>0</value>
+						</property>
+						<property name="panelComponents">
+							<list>
+								<bean class="com.morcinek.finance.ui.components.BaseButton">
+									<property name="actionCommand">
+										<value>add_category</value>
+									</property>
+									<property name="text">
+										<value>Add category</value>
+									</property>
+									<property name="actionListener">
+										<ref bean="categoriesActionListener" />
+									</property>
+								</bean>
+								<bean class="com.morcinek.finance.ui.components.BaseButton">
+									<property name="actionCommand">
+										<value>delete_category</value>
+									</property>
+									<property name="text">
+										<value>Delete selected Category</value>
+									</property>
+									<property name="actionListener">
+										<ref bean="categoriesActionListener" />
+									</property>
+								</bean>
+								<bean class="com.morcinek.finance.ui.components.BaseButton">
+									<property name="actionCommand">
+										<value>back</value>
+									</property>
+									<property name="text">
+										<value>Go back</value>
+									</property>
+									<property name="actionListener">
+										<ref bean="categoriesActionListener" />
+									</property>
+								</bean>
+							</list>
+						</property>
+					</bean>
+				</property>
+				<property name="centerComponent">
+					<ref bean="hierarchyPanel" />
+				</property>
+			</bean>
+		</property>
+		<property name="modalityType">
+			<ref bean="applicationModal" />
+		</property>
+	</bean>
+
+	<!-- confirm panel -->
+	<bean id="confirmPanel" class="com.morcinek.finance.ui.components.BorderPanel">
+		<property name="centerComponent">
+			<ref bean="hierarchyPanel" />
+		</property>
+		<property name="southComponent">
+			<bean class="com.morcinek.finance.ui.components.BasePanel"
+				scope="prototype" init-method="init">
+				<property name="panelComponents">
+					<list>
+						<bean class="com.morcinek.finance.ui.components.BaseButton">
+							<property name="actionCommand">
+								<value>confirm</value>
+							</property>
+							<property name="text">
+								<value>Confirm</value>
+							</property>
+						</bean>
+						<bean class="com.morcinek.finance.ui.components.BaseButton">
+							<property name="actionCommand">
+								<value>back</value>
+							</property>
+							<property name="text">
+								<value>Cancel</value>
+							</property>
+						</bean>
+					</list>
+				</property>
+			</bean>
 		</property>
 	</bean>
 </beans>

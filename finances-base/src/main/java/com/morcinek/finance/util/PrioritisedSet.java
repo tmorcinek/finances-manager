@@ -1,4 +1,4 @@
-package com.morcinek.finance;
+package com.morcinek.finance.util;
 
 import java.util.Comparator;
 import java.util.TreeSet;

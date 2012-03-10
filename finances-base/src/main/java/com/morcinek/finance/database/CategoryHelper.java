@@ -16,7 +16,7 @@ public class CategoryHelper {
 		}
 		for(Category category : categories){
 			DefaultMutableTreeNode categoryMutableTreeNode = categoriesTreeNodes.get(category.getCategoryId());
-			if(category.getParentId() == null || category.getParentId() == category.getCategoryId()){
+			if(category.getParentId() == null || category.getParentId() == 0){
 				root.add(categoryMutableTreeNode);
 			} else {
 				categoriesTreeNodes.get(category.getParentId()).add(categoryMutableTreeNode);

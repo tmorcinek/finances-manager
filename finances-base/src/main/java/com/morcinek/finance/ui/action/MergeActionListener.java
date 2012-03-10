@@ -39,15 +39,15 @@ public class MergeActionListener implements ActionListener {
 
 	@Override
 	public void actionPerformed(ActionEvent e) {
-		JButton source = (JButton) e.getSource();
-		if (source.getName().equals("update_all")) {
+		String source = e.getActionCommand();
+		if ("update_all".equals(source)) {
 			try {
 				DBReport dbReport = dbHelper.addPayments(historyParsing.getPayments());
 				System.out.println(dbReport);
 			} catch (SQLException e1) {
 				e1.printStackTrace();
 			}
-		} else if (source.getName().equals("update_selected")) {
+		} else if ("update_selected".equals(source)) {
 			int[] selectedRows = baseTable.getSelectedRows();
 			ListTableModel listTableModel = baseTable.getListTableModel();
 			List<Payment> payments = new ArrayList<Payment>();
