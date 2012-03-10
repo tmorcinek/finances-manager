@@ -1,4 +1,4 @@
-package com.morcinek.finance;
+package com.morcinek.finance.util;
 
 public interface Prioritised {
 

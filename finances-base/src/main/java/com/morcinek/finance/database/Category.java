@@ -6,7 +6,7 @@ public class Category {
 	private final String categoryName;
 	private final Integer parentId;
 
-	public Category(String pCategoryName, int pParentId) {
+	public Category(String pCategoryName, Integer pParentId) {
 		this(-1, pCategoryName, pParentId);
 	}
 

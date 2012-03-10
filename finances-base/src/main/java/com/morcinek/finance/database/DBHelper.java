@@ -8,6 +8,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.sql.Timestamp;
+import java.sql.Types;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -136,6 +137,23 @@ public class DBHelper {
 	 * @return (List[Category]) of entities from categories table.
 	 * @throws SQLException
 	 */
+	public Category getCategory(String categoryName) throws SQLException {
+		Category category = null;
+		PreparedStatement stat = connection.prepareStatement("select * from categories where categoryName = ?;");
+		stat.setString(1, categoryName);
+		ResultSet rs = stat.executeQuery();
+		while (rs.next()) {
+			category = getCategoryFromResultSet(rs);
+		}
+		rs.close();
+		stat.close();
+		return category;
+	}
+
+	/**
+	 * @return (List[Category]) of entities from categories table.
+	 * @throws SQLException
+	 */
 	public List<Category> getCategories() throws SQLException {
 		List<Category> categories = new ArrayList<Category>();
 		Statement stat = connection.createStatement();
@@ -234,19 +252,24 @@ public class DBHelper {
 	 * @param category
 	 *            (Category) to add to database.
 	 * @return (DBReport) of from transaction.
-	 * @throws SQLException
 	 */
 	public DBReport addCategory(Category category) {
 		DBReport dbReport = new DBReport();
 		try {
 			PreparedStatement prep = connection.prepareStatement("insert into categories values (null,?,?);");
 			prep.setString(1, category.getCategoryName());
-			prep.setInt(2, category.getParentId());
-			prep.executeBatch();
+			Integer parentId = category.getParentId();
+			if (parentId != null) {
+				prep.setInt(2, parentId);
+			} else {
+				prep.setNull(2, Types.INTEGER);
+			}
+			prep.execute();
 			prep.close();
-			dbReport.add(new DBAction("insert", "payments", category));
+			category = getCategory(category.getCategoryName());
+			dbReport.add(new DBAction("insert", "categories", category));
 		} catch (SQLException e) {
-			dbReport.add(new DBAction("insert", "payments", category, e));
+			dbReport.add(new DBAction("insert", "categories", category, e));
 		}
 		return dbReport;
 	}
@@ -255,16 +278,36 @@ public class DBHelper {
 		DBReport dbReport = new DBReport();
 		try {
 			PreparedStatement prep = connection.prepareStatement("insert into paymentsCategories values (?,?);");
-			prep.setString(1, category.getCategoryName());
+			prep.setInt(1, payment.getPaymentId());
 			prep.setInt(2, category.getCategoryId());
-			prep.executeBatch();
+			prep.execute();
 			prep.close();
-			dbReport.add(new DBAction("insert", "payments", category));
+			dbReport.add(new DBAction("insert", "paymentsCategories", category));
 		} catch (SQLException e) {
-			dbReport.add(new DBAction("insert", "payments", category, e));
+			dbReport.add(new DBAction("insert", "paymentsCategories", category, e));
 		}
 		return dbReport;
 
 	}
 
+	/**
+	 * Delete single category from database.
+	 * 
+	 * @param category
+	 *            (Category) to delete from database.
+	 * @return (DBReport) of from transaction.
+	 */
+	public DBReport deleteCategory(Category category) {
+		DBReport dbReport = new DBReport();
+		try {
+			PreparedStatement prep = connection.prepareStatement("delete from categories where categoryId = ?;");
+			prep.setInt(1, category.getCategoryId());
+			prep.execute();
+			prep.close();
+			dbReport.add(new DBAction("delete", "categories", category));
+		} catch (SQLException e) {
+			dbReport.add(new DBAction("delete", "categories", category, e));
+		}
+		return dbReport;
+	}
 }

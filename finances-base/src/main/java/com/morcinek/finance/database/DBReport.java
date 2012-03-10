@@ -19,6 +19,15 @@ public class DBReport extends ArrayList<DBAction> {
 		}
 		return builder.toString();
 	}
+
+	public boolean hasError() {
+		for (DBAction dbAction : this) {
+			if (dbAction.isError()) {
+				return true;
+			}
+		}
+		return false;
+	}
 }
 
 class DBAction {
@@ -63,7 +72,8 @@ class DBAction {
 
 	@Override
 	public String toString() {
-		return ((exception!=null)?exception.getMessage():"") +"[action=" + action + ", column=" + table + ", value=" + value + "]";
+		return ((exception != null) ? exception.getMessage() : "") + "[action=" + action + ", column=" + table
+				+ ", value=" + value + "]";
 	}
 
 	public List<?> getObjects() {
@@ -87,7 +97,7 @@ class DBAction {
 	}
 
 	public boolean isError() {
-		return exception == null;
+		return exception != null;
 	}
 
 }

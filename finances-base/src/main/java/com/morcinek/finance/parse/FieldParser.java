@@ -8,9 +8,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
 
-import com.morcinek.finance.PrioritisedSet;
 import com.morcinek.finance.parse.exceptions.IncompatibleFormatException;
 import com.morcinek.finance.parse.objects.ObjectParser;
+import com.morcinek.finance.util.PrioritisedSet;
 
 @Component
 public class FieldParser {

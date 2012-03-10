@@ -2,7 +2,7 @@ package com.morcinek.finance.ui.table.renderers;
 
 import java.awt.Color;
 
-import com.morcinek.finance.Prioritised;
+import com.morcinek.finance.util.Prioritised;
 
 public interface RowRendererInterface extends Prioritised {
 

@@ -17,11 +17,11 @@ import javax.swing.table.TableRowSorter;
 
 import org.springframework.beans.factory.annotation.Autowired;
 
-import com.morcinek.finance.PrioritisedSet;
 import com.morcinek.finance.parse.FieldParser;
 import com.morcinek.finance.parse.objects.ObjectParser;
 import com.morcinek.finance.ui.table.model.ListTableModel;
 import com.morcinek.finance.ui.table.renderers.RowRendererInterface;
+import com.morcinek.finance.util.PrioritisedSet;
 
 @org.springframework.stereotype.Component
 public class BaseTable extends JTable {

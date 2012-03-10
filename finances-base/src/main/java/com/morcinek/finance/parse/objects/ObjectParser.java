@@ -1,7 +1,7 @@
 package com.morcinek.finance.parse.objects;
 
-import com.morcinek.finance.Prioritised;
 import com.morcinek.finance.parse.exceptions.IncompatibleFormatException;
+import com.morcinek.finance.util.Prioritised;
 
 public abstract class ObjectParser implements Prioritised {
 

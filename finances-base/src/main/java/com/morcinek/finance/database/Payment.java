@@ -4,7 +4,6 @@ import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
-import java.util.List;
 
 public class Payment extends ArrayList<Object> {
 
@@ -25,8 +24,6 @@ public class Payment extends ArrayList<Object> {
 	private String additionalInformations;
 
 	private int paymentId = -1;
-	
-	private List<Category> categories;
 
 	public Payment(Object... values) {
 		super(Arrays.asList(values));
@@ -121,8 +118,8 @@ public class Payment extends ArrayList<Object> {
 	public void setAdditionalInformations(String additionalInformations) {
 		this.additionalInformations = additionalInformations;
 	}
-	
-	public void setPaymentId(int pPaymentId){
+
+	public void setPaymentId(int pPaymentId) {
 		paymentId = pPaymentId;
 	}
 
@@ -130,10 +127,9 @@ public class Payment extends ArrayList<Object> {
 		return paymentId;
 	}
 
-//	public List<Category> getCategories() {
-//		if(categories == null && paymentId != -1){
-//			
-//		}
-//		return categories;
-//	}
+	@Override
+	public String toString() {
+		return "Payment(" + transactionNumber + ")";
+	}
+
 }
