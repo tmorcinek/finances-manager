@@ -1,5 +1,7 @@
 package com.morcinek.finance.ui.components;
 
+import java.awt.Component;
+import java.awt.Font;
 import java.awt.Window;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -12,15 +14,16 @@ import java.util.concurrent.Callable;
 import javax.swing.JButton;
 import javax.swing.JComponent;
 import javax.swing.JDialog;
-import javax.swing.JLabel;
+import javax.swing.JList;
 import javax.swing.JPanel;
+import javax.swing.JScrollPane;
 import javax.swing.JTabbedPane;
 import javax.swing.JTextField;
+import javax.swing.ListSelectionModel;
 import javax.swing.WindowConstants;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
-import org.springframework.stereotype.Component;
 
 import com.jgoodies.forms.builder.PanelBuilder;
 import com.jgoodies.forms.layout.CellConstraints;
@@ -32,9 +35,9 @@ import com.morcinek.finance.util.ApplicationContextProvider;
 import com.morcinek.finance.util.PropertiesAdapter;
 import com.morcinek.properties.Features;
 
-@Component
+@org.springframework.stereotype.Component
 @Scope(value = "prototype")
-public class PaymentDialog extends JDialog {
+public class PaymentDialog extends JDialog implements ActionListener {
 
 	/**
 	 * 
@@ -93,49 +96,25 @@ public class PaymentDialog extends JDialog {
 	}
 
 	private JPanel getCategoriesPanel() {
-		List<JLabel> labels = new ArrayList<JLabel>();
+		BorderPanel borderPanel = (BorderPanel) ApplicationContextProvider.getApplicationContext().getBean("tagsPanel");
 		try {
-			for (Category category : dbHelper.getPaymentCategory(payment)) {
-				labels.add(new JLabel(category.toString()));
-			}
+			List<Category> paymentCategories = dbHelper.getPaymentCategory(payment);
+			JList categoriesList = new JList(paymentCategories.toArray());
+			categoriesList.setSelectionMode(ListSelectionModel.SINGLE_INTERVAL_SELECTION);
+			categoriesList.setLayoutOrientation(JList.HORIZONTAL_WRAP);
+//			categoriesList.setEnabled(false);
+			Font displayFont = new Font("Serif", Font.BOLD, 30);
+		    categoriesList.setFont(displayFont);
+			JScrollPane listScroller = new JScrollPane(categoriesList);
+			borderPanel.setCenterComponent(listScroller);
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
-		JPanel panel = new JPanel();
-		JButton button = new JButton("Show categories");
-		button.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				JDialog dialog = (JDialog) ApplicationContextProvider.getApplicationContext().getBean(
-						"categoriesDialog");
-				dialog.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
-				dialog.pack();
-				dialog.setVisible(true);
-			}
-		});
-		panel.add(button);
-		button = new JButton("Add Category");
-		button.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				ConfirmDialog dialog = (ConfirmDialog) ApplicationContextProvider.getApplicationContext().getBean(
-						"confirmDialog");
-				dialog.show(new Callable<String>() {
-					@Override
-					public String call() throws Exception {
-
-						return null;
-					}
-				}, payment);
-			}
-		});
-		panel.add(button);
-		BoxLayoutPanel boxLayoutPanel = new BoxLayoutPanel();
-		boxLayoutPanel.setAxis(1);
-		boxLayoutPanel.setPanelComponents(labels);
-		boxLayoutPanel.init();
-		panel.add(boxLayoutPanel);
-		return panel;
+		JPanel southPanel = (JPanel) borderPanel.getSouthComponent();
+		for (Component component : southPanel.getComponents()) {
+			((JButton) component).addActionListener(this);
+		}
+		return borderPanel;
 	}
 
 	public static JTextField getDisabledTextField(String text) {
@@ -154,6 +133,28 @@ public class PaymentDialog extends JDialog {
 			rowSpec = rowSpec.concat(", 3dlu, p");
 		}
 		return rowSpec;
+	}
+
+	@Override
+	public void actionPerformed(ActionEvent e) {
+		String actionCommand = e.getActionCommand();
+		if ("add_category".equals(actionCommand)) {
+			JDialog dialog = (JDialog) ApplicationContextProvider.getApplicationContext().getBean(
+					"categoriesDialog");
+			dialog.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
+			dialog.pack();
+			dialog.setVisible(true);
+		} else {
+			ConfirmDialog dialog = (ConfirmDialog) ApplicationContextProvider.getApplicationContext().getBean(
+					"confirmDialog");
+			dialog.show(new Callable<String>() {
+				@Override
+				public String call() throws Exception {
+
+					return null;
+				}
+			}, payment);
+		}
 	}
 
 }

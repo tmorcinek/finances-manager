@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:context="http://www.springframework.org/schema/context"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans
+http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
+http://www.springframework.org/schema/context
+http://www.springframework.org/schema/context/spring-context-3.0.xsd">
+
+	<context:annotation-config />
+
+	<context:component-scan base-package="com.morcinek.finance" />
+
+	<import resource="services.xml" />
+
+	<!-- confirm panel -->
+	<bean id="tagsPanel" class="com.morcinek.finance.ui.components.BorderPanel" scope="prototype">
+		<property name="opaque">
+			<value>true</value>
+		</property>	
+		<property name="southComponent">
+			<bean class="com.morcinek.finance.ui.components.BasePanel"
+				scope="prototype" init-method="init">
+				<property name="panelComponents">
+					<list>
+						<bean class="com.morcinek.finance.ui.components.BaseButton">
+							<property name="actionCommand">
+								<value>add_category</value>
+							</property>
+							<property name="text">
+								<value>Add Category to Payment</value>
+							</property>
+						</bean>
+						<bean class="com.morcinek.finance.ui.components.BaseButton">
+							<property name="actionCommand">
+								<value>add_payment_category</value>
+							</property>
+							<property name="text">
+								<value>Add new Category</value>
+							</property>
+						</bean>
+					</list>
+				</property>
+			</bean>
+		</property>
+	</bean>
+</beans>

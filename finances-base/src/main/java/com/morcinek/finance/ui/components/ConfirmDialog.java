@@ -21,6 +21,7 @@ import com.morcinek.finance.util.ApplicationContextProvider;
 import com.morcinek.properties.Features;
 
 @org.springframework.stereotype.Component
+@Scope(value = "prototype")
 public class ConfirmDialog extends AbstractDialog {
 
 	/**
