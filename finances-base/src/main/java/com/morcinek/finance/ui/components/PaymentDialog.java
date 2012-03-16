@@ -11,16 +11,17 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.concurrent.Callable;
 
+import javax.swing.DefaultListModel;
 import javax.swing.JButton;
 import javax.swing.JComponent;
 import javax.swing.JDialog;
 import javax.swing.JList;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTabbedPane;
 import javax.swing.JTextField;
 import javax.swing.ListSelectionModel;
-import javax.swing.WindowConstants;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
@@ -31,6 +32,7 @@ import com.jgoodies.forms.layout.FormLayout;
 import com.morcinek.finance.database.Category;
 import com.morcinek.finance.database.DBHelper;
 import com.morcinek.finance.database.Payment;
+import com.morcinek.finance.util.Alerts;
 import com.morcinek.finance.util.ApplicationContextProvider;
 import com.morcinek.finance.util.PropertiesAdapter;
 import com.morcinek.properties.Features;
@@ -52,6 +54,10 @@ public class PaymentDialog extends JDialog implements ActionListener {
 
 	private Payment payment;
 
+	private DefaultListModel listModel;
+
+	private JList categoriesList;
+
 	public PaymentDialog(Window owner) {
 		super(owner);
 		setDefaultCloseOperation(DISPOSE_ON_CLOSE);
@@ -71,7 +77,6 @@ public class PaymentDialog extends JDialog implements ActionListener {
 
 		tabbedPane.add(propertiesAdapter.getProperty("paymentsDialog_generalTab"), getPaymentFormPanel());
 		tabbedPane.add(propertiesAdapter.getProperty("paymentsDialog_categoryTab"), getCategoriesPanel());
-		tabbedPane.add(propertiesAdapter.getProperty("paymentsDialog_commentTab"), getBlankPanel());
 
 		return tabbedPane;
 	}
@@ -98,13 +103,13 @@ public class PaymentDialog extends JDialog implements ActionListener {
 	private JPanel getCategoriesPanel() {
 		BorderPanel borderPanel = (BorderPanel) ApplicationContextProvider.getApplicationContext().getBean("tagsPanel");
 		try {
-			List<Category> paymentCategories = dbHelper.getPaymentCategory(payment);
-			JList categoriesList = new JList(paymentCategories.toArray());
+			listModel = new DefaultListModel();
+			updateListModel();
+			categoriesList = new JList(listModel);
 			categoriesList.setSelectionMode(ListSelectionModel.SINGLE_INTERVAL_SELECTION);
 			categoriesList.setLayoutOrientation(JList.HORIZONTAL_WRAP);
-//			categoriesList.setEnabled(false);
-			Font displayFont = new Font("Serif", Font.BOLD, 30);
-		    categoriesList.setFont(displayFont);
+			Font displayFont = new Font("Serif", Font.BOLD, 50);
+			categoriesList.setFont(displayFont);
 			JScrollPane listScroller = new JScrollPane(categoriesList);
 			borderPanel.setCenterComponent(listScroller);
 		} catch (SQLException e) {
@@ -115,6 +120,13 @@ public class PaymentDialog extends JDialog implements ActionListener {
 			((JButton) component).addActionListener(this);
 		}
 		return borderPanel;
+	}
+
+	private void updateListModel() throws SQLException {
+		listModel.removeAllElements();
+		for (Category category : dbHelper.getPaymentCategory(payment)) {
+			listModel.addElement(category);
+		}
 	}
 
 	public static JTextField getDisabledTextField(String text) {
@@ -139,18 +151,28 @@ public class PaymentDialog extends JDialog implements ActionListener {
 	public void actionPerformed(ActionEvent e) {
 		String actionCommand = e.getActionCommand();
 		if ("add_category".equals(actionCommand)) {
-			JDialog dialog = (JDialog) ApplicationContextProvider.getApplicationContext().getBean(
-					"categoriesDialog");
-			dialog.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
-			dialog.pack();
-			dialog.setVisible(true);
+			NewCategoryDialog dialog = (NewCategoryDialog) ApplicationContextProvider.getApplicationContext().getBean(
+					"newCategoryDialog", this);
+			dialog.showDialog(null);
+		} else if ("delete_category".equals(actionCommand)) {
+			Category category = (Category) categoriesList.getSelectedValue();
+			if (category != null) {
+				if (Alerts.getConfirmDialog(this) == JOptionPane.YES_OPTION) {
+					dbHelper.deletePaymentCategory(payment, category);
+					try {
+						updateListModel();
+					} catch (SQLException e1) {
+						Alerts.showErrorDialog(PaymentDialog.this, e1);
+					}
+				}
+			}
 		} else {
-			ConfirmDialog dialog = (ConfirmDialog) ApplicationContextProvider.getApplicationContext().getBean(
-					"confirmDialog");
-			dialog.show(new Callable<String>() {
+			AddCategoryDialog dialog = (AddCategoryDialog) ApplicationContextProvider.getApplicationContext().getBean(
+					"addCategoryDialog", this);
+			dialog.showDialog(new Callable<String>() {
 				@Override
 				public String call() throws Exception {
-
+					updateListModel();
 					return null;
 				}
 			}, payment);

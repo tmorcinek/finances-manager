@@ -1,5 +1,6 @@
 package com.morcinek.finance.database;
 
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -27,6 +28,16 @@ public class DBReport extends ArrayList<DBAction> {
 			}
 		}
 		return false;
+	}
+
+	// FIXME handle situation when more then one error is thrown
+	public SQLException getError() {
+		for (DBAction dbAction : this) {
+			if (dbAction.isError()) {
+				return dbAction.getError();
+			}
+		}
+		return null;
 	}
 }
 
@@ -57,13 +68,13 @@ class DBAction {
 	/**
 	 * Exception thrown during Database update.
 	 */
-	private final Exception exception;
+	private final SQLException exception;
 
 	public DBAction(String action, String table, Object value) {
 		this(action, table, value, null);
 	}
 
-	public DBAction(String action, String table, Object value, Exception exception) {
+	public DBAction(String action, String table, Object value, SQLException exception) {
 		this.action = action;
 		this.table = table;
 		this.value = value;
@@ -94,6 +105,10 @@ class DBAction {
 
 	public Object getValue() {
 		return value;
+	}
+	
+	public SQLException getError(){
+		return exception;
 	}
 
 	public boolean isError() {
