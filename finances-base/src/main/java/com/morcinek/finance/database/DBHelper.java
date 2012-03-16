@@ -12,6 +12,8 @@ import java.sql.Types;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Set;
+import java.util.TreeSet;
 
 import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;
@@ -88,15 +90,34 @@ public class DBHelper {
 	 * @throws SQLException
 	 */
 	public List<Payment> getPayments() throws SQLException {
-		List<Payment> payments = new ArrayList<Payment>();
 		Statement stat = connection.createStatement();
 		ResultSet rs = stat.executeQuery("select * from payments;");
-		while (rs.next()) {
-			payments.add(getPaymentFromResultSet(rs));
-		}
+		List<Payment> payments = getPaymentsFromResultSet(rs);
 		rs.close();
 		stat.close();
 		return payments;
+	}
+
+	public Set<Integer> getPaymentsIdsByCategory(Category category) throws SQLException {
+		return getPaymentsIdsByCategory(category.getCategoryId());
+	}
+
+	public Set<Integer> getPaymentsIdsByCategory(int categoryId) throws SQLException {
+		return getPaymentsIdsByCategory(new int[] { categoryId });
+	}
+
+	public Set<Integer> getPaymentsIdsByCategory(int[] categoryId) throws SQLException {
+		PreparedStatement stat = connection
+				.prepareStatement("SELECT DISTINCT P.paymentsId FROM payments P INNER JOIN paymentsCategories PC on P.paymentsId = PC.paymentsId where PC.categoryId IN (?);");
+		Set<Integer> paymentsIds = new TreeSet<Integer>();
+		for (int i : categoryId) {
+			stat.setInt(1, i);
+			ResultSet rs = stat.executeQuery();
+			paymentsIds.addAll(getIntegersFromResultSet(rs));
+			rs.close();
+		}
+		stat.close();
+		return paymentsIds;
 	}
 
 	/**
@@ -114,6 +135,22 @@ public class DBHelper {
 		rs.close();
 		stat.close();
 		return transactionNumbers;
+	}
+
+	private Set<Integer> getIntegersFromResultSet(ResultSet rs) throws SQLException {
+		Set<Integer> payments = new TreeSet<Integer>();
+		while (rs.next()) {
+			payments.add(rs.getInt(1));
+		}
+		return payments;
+	}
+
+	private List<Payment> getPaymentsFromResultSet(ResultSet rs) throws SQLException {
+		List<Payment> payments = new ArrayList<Payment>();
+		while (rs.next()) {
+			payments.add(getPaymentFromResultSet(rs));
+		}
+		return payments;
 	}
 
 	private Payment getPaymentFromResultSet(ResultSet resultSet) throws SQLException {
@@ -216,7 +253,7 @@ public class DBHelper {
 				try {
 					addPayment(payment, prep);
 					dbReport.add(new DBAction("insert", "payments", payment));
-				} catch (Exception e) {
+				} catch (SQLException e) {
 					dbReport.add(new DBAction("insert", "payments", payment, e));
 				}
 			}
@@ -290,6 +327,23 @@ public class DBHelper {
 
 	}
 
+	public DBReport deletePaymentCategory(Payment payment, Category category) {
+		DBReport dbReport = new DBReport();
+		try {
+			PreparedStatement prep = connection
+					.prepareStatement("delete from paymentsCategories where paymentsId = ? and  categoryId = ?;");
+			prep.setInt(1, payment.getPaymentId());
+			prep.setInt(2, category.getCategoryId());
+			prep.execute();
+			prep.close();
+			dbReport.add(new DBAction("delete", "paymentsCategories", new Object[] { payment, category }));
+		} catch (SQLException e) {
+			dbReport.add(new DBAction("delete", "paymentsCategories", new Object[] { payment, category }, e));
+		}
+		return dbReport;
+
+	}
+
 	/**
 	 * Delete single category from database.
 	 * 
@@ -310,4 +364,5 @@ public class DBHelper {
 		}
 		return dbReport;
 	}
+
 }

@@ -10,5 +10,12 @@ http://www.springframework.org/schema/context/spring-context-3.0.xsd">
 
 	<context:component-scan base-package="com.morcinek.finance.database" />
 
+	<bean id="sqlSentencesAdapter" class="com.morcinek.finance.util.SQLSentencesAdapter">
+		<property name="sqlFiles">
+			<list>
+				<value>database.sql</value>
+			</list>
+		</property>
+	</bean>
 
 </beans>

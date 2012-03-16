@@ -1,7 +1,6 @@
 package com.morcinek.finance.ui.components;
 
 import java.awt.Dimension;
-import java.awt.Toolkit;
 import java.sql.SQLException;
 import java.util.List;
 
@@ -22,10 +21,14 @@ import com.morcinek.finance.database.Category;
 import com.morcinek.finance.database.CategoryHelper;
 import com.morcinek.finance.database.DBHelper;
 import com.morcinek.finance.database.DBReport;
+import com.morcinek.finance.database.Payment;
+import com.morcinek.finance.exceptions.FinanceException;
 
 @Component
 @Scope(value = "prototype")
 public class HierarchyPanel extends JScrollPane {
+
+	private static final String CATEGORY_IS_NOT_SELECTED_ERROR = "Category is not selected.";
 
 	/**
 	 * 
@@ -34,8 +37,6 @@ public class HierarchyPanel extends JScrollPane {
 
 	@Autowired(required = true)
 	private DBHelper dbHelper;
-
-	private static Toolkit toolkit = Toolkit.getDefaultToolkit();
 
 	private JTree tree;
 
@@ -59,35 +60,51 @@ public class HierarchyPanel extends JScrollPane {
 		setOpaque(true);
 	}
 
-	/** Remove the currently selected node. */
-	public void removeCurrentNode() {
-		TreePath currentSelection = tree.getSelectionPath();
-		if (currentSelection != null) {
-			DefaultMutableTreeNode currentNode = (DefaultMutableTreeNode) (currentSelection.getLastPathComponent());
+	/**
+	 * Remove the currently selected node.
+	 * 
+	 * @throws SQLException
+	 * @throws FinanceException
+	 */
+	public void removeCurrentNode() throws FinanceException, SQLException {
+		DefaultMutableTreeNode currentNode = getSelectedNode();
+		if (currentNode != null) {
 			MutableTreeNode parent = (MutableTreeNode) (currentNode.getParent());
 			if (parent != null && currentNode.isLeaf()) {
 				DBReport deleteCategory = dbHelper.deleteCategory((Category) currentNode.getUserObject());
 				if (!deleteCategory.hasError()) {
 					treeModel.removeNodeFromParent(currentNode);
 					return;
+				} else {
+					throw deleteCategory.getError();
 				}
+			} else {
+				throw new FinanceException("Category is not a leaf.");
 			}
+		} else {
+			throw new FinanceException(CATEGORY_IS_NOT_SELECTED_ERROR);
 		}
-		toolkit.beep();
 	}
 
-	/** Add child to the currently selected node. */
-	public DefaultMutableTreeNode addObject(String child) {
-		TreePath parentPath = tree.getSelectionPath();
-		if (parentPath != null && !child.isEmpty()) {
-			DefaultMutableTreeNode parentNode = (DefaultMutableTreeNode) (parentPath.getLastPathComponent());
+	/**
+	 * Add child to the currently selected node.
+	 * 
+	 * @throws FinanceException
+	 * 
+	 * @throws SQLException
+	 */
+	public DefaultMutableTreeNode addObject(String child) throws FinanceException, SQLException {
+		DefaultMutableTreeNode parentNode = getSelectedNode();
+		if (parentNode == null) {
+			throw new FinanceException("Parent category is not selected.");
+		} else if (child.isEmpty()) {
+			throw new FinanceException("Child name is empty.");
+		} else {
 			return addObject(parentNode, child);
 		}
-		toolkit.beep();
-		return null;
 	}
 
-	private DefaultMutableTreeNode addObject(DefaultMutableTreeNode parent, String child) {
+	private DefaultMutableTreeNode addObject(DefaultMutableTreeNode parent, String child) throws SQLException {
 		Category newCategory;
 		try {
 			newCategory = new Category(child, ((Category) parent.getUserObject()).getCategoryId());
@@ -100,13 +117,24 @@ public class HierarchyPanel extends JScrollPane {
 			treeModel.insertNodeInto(childNode, parent, parent.getChildCount());
 			tree.scrollPathToVisible(new TreePath(childNode.getPath()));
 			return childNode;
+		} else {
+			throw addCategory.getError();
 		}
-
-		toolkit.beep();
-		return null;
 	}
 
-	public DefaultMutableTreeNode getSelectedNode() {
+	public void addCategoryToPayment(Object payment) throws SQLException, FinanceException {
+		try {
+			Category userObject = (Category) getSelectedNode().getUserObject();
+			DBReport addPaymentCategory = dbHelper.addPaymentCategory((Payment) payment, userObject);
+			if (addPaymentCategory.hasError()) {
+				throw addPaymentCategory.getError();
+			}
+		} catch (ClassCastException e) {
+			throw new FinanceException(CATEGORY_IS_NOT_SELECTED_ERROR);
+		}
+	}
+
+	protected DefaultMutableTreeNode getSelectedNode() {
 		return (DefaultMutableTreeNode) tree.getLastSelectedPathComponent();
 	}
 }
