@@ -27,7 +27,7 @@ public class Alerts {
 	public static int getConfirmDialog() {
 		return getConfirmDialog(confirmationText);
 	}
-
+	
 	public static void showErrorDialog(Window window, SQLException exception) {
 		showErrorDialog(window, exception.getMessage());
 	}

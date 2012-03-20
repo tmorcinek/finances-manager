@@ -5,7 +5,9 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
 
-public class Payment extends ArrayList<Object> {
+import com.morcinek.finance.ui.CopyInterface;
+
+public class Payment extends ArrayList<Object> implements CopyInterface {
 
 	/**
 	 * 
@@ -130,6 +132,14 @@ public class Payment extends ArrayList<Object> {
 	@Override
 	public String toString() {
 		return "Payment(" + transactionNumber + ")";
+	}
+
+	@Override
+	public String toCopyString() {
+		return "Payment [paymentId=" + paymentId +", bookingDate="  + bookingDate + ", realizingDate=" + realizingDate + ", amount=" + amount
+				+ ", currency=" + currency + ", account=" + account + ", bankName=" + bankName + ", recipient="
+				+ recipient + ", title=" + title + ", transactionNumber=" + transactionNumber
+				+ ", additionalInformations=" + additionalInformations + "]";
 	}
 
 }

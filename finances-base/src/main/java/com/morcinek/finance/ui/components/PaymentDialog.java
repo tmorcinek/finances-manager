@@ -11,6 +11,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.concurrent.Callable;
 
+import javax.annotation.PostConstruct;
 import javax.swing.DefaultListModel;
 import javax.swing.JButton;
 import javax.swing.JComponent;
@@ -60,6 +61,14 @@ public class PaymentDialog extends JDialog implements ActionListener {
 
 	public PaymentDialog(Window owner) {
 		super(owner);
+	}
+
+	public PaymentDialog() {
+		super();
+	}
+
+	@PostConstruct
+	public void init() {
 		setDefaultCloseOperation(DISPOSE_ON_CLOSE);
 	}
 

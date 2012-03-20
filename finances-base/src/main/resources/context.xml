@@ -28,9 +28,12 @@ http://www.springframework.org/schema/context/spring-context-3.0.xsd">
 			</list>
 		</property>
 		<property name="mouseListener">
-			<bean class="com.morcinek.finance.ui.action.PaymentDialogMouseListener">
+			<bean class="com.morcinek.finance.ui.action.PaymentTableMouseListener">
 				<property name="window">
 					<ref bean="mainFrame" />
+				</property>
+				<property name="basePopupMenu">
+					<ref bean="basePopupMenu" />
 				</property>
 			</bean>
 		</property>
@@ -125,9 +128,12 @@ http://www.springframework.org/schema/context/spring-context-3.0.xsd">
 			<ref bean="validationRowRenderer" />
 		</property>
 		<property name="mouseListener">
-			<bean class="com.morcinek.finance.ui.action.PaymentDialogMouseListener">
+			<bean class="com.morcinek.finance.ui.action.PaymentTableMouseListener">
 				<property name="window">
 					<ref bean="mergeDialog" />
+				</property>
+				<property name="basePopupMenu">
+					<ref bean="mergePopupMenu" />
 				</property>
 			</bean>
 		</property>
@@ -147,34 +153,22 @@ http://www.springframework.org/schema/context/spring-context-3.0.xsd">
 					<property name="panelComponents">
 						<list>
 							<bean class="com.morcinek.finance.ui.components.BaseButton">
-								<property name="actionCommand">
-									<value>update_all</value>
-								</property>
-								<property name="text">
-									<value>Update all Payments</value>
-								</property>
+								<property name="actionCommand" value="update_all" />
+								<property name="text" value="Update all Payments" />
 								<property name="actionListener">
 									<ref bean="mergeActionListener" />
 								</property>
 							</bean>
 							<bean class="com.morcinek.finance.ui.components.BaseButton">
-								<property name="actionCommand">
-									<value>update_selected</value>
-								</property>
-								<property name="text">
-									<value>Update selected Payments</value>
-								</property>
+								<property name="actionCommand" value="update_selected" />
+								<property name="text" value="Update selected Payments" />
 								<property name="actionListener">
 									<ref bean="mergeActionListener" />
 								</property>
 							</bean>
 							<bean class="com.morcinek.finance.ui.components.BaseButton">
-								<property name="actionCommand">
-									<value>back</value>
-								</property>
-								<property name="text">
-									<value>Go back</value>
-								</property>
+								<property name="actionCommand" value="back" />
+								<property name="text" value="Go back" />
 								<property name="actionListener">
 									<ref bean="mergeActionListener" />
 								</property>
@@ -207,6 +201,51 @@ http://www.springframework.org/schema/context/spring-context-3.0.xsd">
 		</property>
 		<property name="actionListener">
 			<ref bean="populateActionListener" />
+		</property>
+	</bean>
+
+	<bean id="basePopupMenu" class="com.morcinek.finance.ui.components.BasePopupMenu">
+		<constructor-arg>
+			<list>
+				<bean class="com.morcinek.finance.ui.components.BaseMenuItem">
+					<property name="actionCommand" value="open" />
+					<property name="text" value="Open" />
+					<property name="maxObjects" value="5" />
+					<property name="menuItemActionListener">
+						<ref bean="basicTableMenuAction" />
+					</property>
+				</bean>
+				<bean class="com.morcinek.finance.ui.components.BaseMenuItem">
+					<property name="actionCommand" value="copy" />
+					<property name="text" value="Copy" />
+					<property name="menuItemActionListener">
+						<ref bean="basicTableMenuAction" />
+					</property>
+				</bean>
+				<bean class="com.morcinek.finance.ui.components.BaseMenuItem">
+					<property name="actionCommand" value="add_categories" />
+					<property name="text" value="Add Categories" />
+					<property name="menuItemActionListener">
+						<ref bean="basicTableMenuAction" />
+					</property>
+				</bean>
+
+			</list>
+		</constructor-arg>
+	</bean>
+
+	<bean id="mergePopupMenu" parent="basePopupMenu" class="com.morcinek.finance.ui.components.BasePopupMenu">
+		<property name="menuItems">
+			<list>
+				<value>separator</value>
+				<bean class="com.morcinek.finance.ui.components.BaseMenuItem">
+					<property name="actionCommand" value="update_selected" />
+					<property name="text" value="Update selected Payments" />
+					<property name="menuItemActionListener">
+						<ref bean="mergeMenuItemAction" />
+					</property>
+				</bean>
+			</list>
 		</property>
 	</bean>
 
