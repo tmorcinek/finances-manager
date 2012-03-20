@@ -49,7 +49,9 @@ public class AddCategoryDialog extends AbstractDialog {
 			if (Alerts.getConfirmDialog(AddCategoryDialog.this) == JOptionPane.YES_OPTION) {
 				try {
 					hierarchyPanel.addCategoryToPayment(objects[0]);
-					callable.call();
+					if (callable != null) {
+						callable.call();
+					}
 					dispose();
 				} catch (FinanceException e1) {
 					Alerts.showInformationDialog(this, e1);

@@ -7,30 +7,36 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import javax.swing.JMenuItem;
-import javax.swing.JPopupMenu;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import com.morcinek.finance.database.Payment;
+import com.morcinek.finance.ui.components.BasePopupMenu;
 import com.morcinek.finance.ui.components.PaymentDialog;
 import com.morcinek.finance.ui.table.BaseTable;
 import com.morcinek.finance.util.ApplicationContextProvider;
 
 @Component
-public class PaymentDialogMouseListener extends MouseAdapter {
+public class PaymentTableMouseListener extends MouseAdapter {
 
 	private Window window;
+
+	private BasePopupMenu basePopupMenu;
 
 	@Autowired
 	public void setWindow(Window window) {
 		this.window = window;
 	}
+	
+	@Autowired(required=true)
+	public void setBasePopupMenu(BasePopupMenu basePopupMenu) {
+		this.basePopupMenu = basePopupMenu;
+	}
+
+
 
 	@Override
 	public void mouseClicked(MouseEvent e) {
-		// FIXME implement that way not to lose selection of multiple objects
 		if (e.getClickCount() == 2) {
 			BaseTable baseTable = (BaseTable) e.getSource();
 			int convertRowIndexToModel = baseTable.getSelectedRow();
@@ -72,15 +78,13 @@ public class PaymentDialogMouseListener extends MouseAdapter {
 				}
 				selectedRows = sortedRows;
 			}
-			JPopupMenu popupMenu = new JPopupMenu("Menu");
-//			popupMenu.setI
 			List<Payment> payments = new ArrayList<Payment>();
 			for (int i : selectedRows) {
 				Payment payment = (Payment) baseTable.getListTableModel().getRowAt(i);
 				payments.add(payment);
-				popupMenu.add(new JMenuItem(payment.toString()));
 			}
-			popupMenu.show(baseTable, e.getX(), e.getY());
+			basePopupMenu.update(payments);
+			basePopupMenu.show(baseTable, e.getX(), e.getY());
 		}
 	}
 
@@ -96,6 +100,5 @@ public class PaymentDialogMouseListener extends MouseAdapter {
 		BaseTable baseTable = (BaseTable) e.getSource();
 		baseTable.setHighlightedRow(-1);
 	}
-	
-	
+
 }

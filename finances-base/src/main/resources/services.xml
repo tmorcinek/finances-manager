@@ -47,4 +47,14 @@ http://www.springframework.org/schema/context/spring-context-3.0.xsd">
 			</list>
 		</property>
 	</bean>
+	<bean id="resourcesAdapter" class="com.morcinek.finance.util.ResourcesAdapter">
+		<property name="registerResource">
+			<list>
+				<list>
+					<value>png</value>
+					<value>images</value>
+				</list>
+			</list>
+		</property>
+	</bean>
 </beans>
