@@ -4,3 +4,4 @@
 /finances-base/bin/
 /finances-base/*.db
 /finances-base/src/main/generated/
+/finances-base/*.exe
