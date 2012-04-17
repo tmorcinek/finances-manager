@@ -40,6 +40,7 @@ public class ListTableModel extends AbstractTableModel {
 		for (List<?> list : pData) {
 			count = Math.max(count, list.size());
 		}
+		fireTableStructureChanged();
 	}
 
 	public void setHeader(List<String> pHeader) {
@@ -94,5 +95,4 @@ public class ListTableModel extends AbstractTableModel {
 	public List<?> getRowAt(int rowIndex) {
 		return data.get(rowIndex);
 	}
-
 }

@@ -17,6 +17,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 
 import com.morcinek.finance.parse.HistoryParsing;
+import com.morcinek.finance.ui.ComponentsFactory;
 import com.morcinek.finance.ui.table.BaseTable;
 import com.morcinek.finance.ui.table.model.ListTableModel;
 import com.morcinek.finance.util.ApplicationContextProvider;
@@ -77,12 +78,9 @@ public class FileChooserAction implements ActionListener {
 				e1.printStackTrace();
 			}
 			JDialog dialog = (JDialog) ApplicationContextProvider.getApplicationContext().getBean("mergeDialog");
-			BaseTable mergeTable = (BaseTable) ApplicationContextProvider.getApplicationContext().getBean("mergeTable");
+			BaseTable mergeTable = ComponentsFactory.createBaseTable(historyParsing.getNonPayments(), "mergeTable");
 			ListTableModel tableModel = mergeTable.getListTableModel();
-			tableModel.clear();
-			tableModel.setData(historyParsing.getNonPayments());
 			tableModel.setData(new ArrayList<List<?>>(historyParsing.getPayments()));
-			tableModel.fireTableStructureChanged();
 			dialog.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
 			dialog.pack();
 			dialog.setVisible(true);

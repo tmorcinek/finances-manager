@@ -1,9 +1,10 @@
-package com.morcinek.finance.ui.components;
+package com.morcinek.finance.ui.util;
 
 import java.awt.Component;
 import java.util.List;
 
 import javax.swing.JPopupMenu;
+
 
 @org.springframework.stereotype.Component
 public class BasePopupMenu extends JPopupMenu {

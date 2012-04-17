@@ -106,6 +106,33 @@ public class DBHelper {
 		return getPaymentsIdsByCategory(new int[] { categoryId });
 	}
 
+	/**
+	 * @see this method is just delegating role to
+	 *      {@link #getPaymentsIdsByCategory(int[])}
+	 * @param categories
+	 * @return
+	 * @throws SQLException
+	 */
+	public Set<Integer> getPaymentsIdsByCategory(List<Category> categories) throws SQLException {
+		return getPaymentsIdsByCategory(getCategoryIdsArrayFromCategoriesList(categories));
+	}
+
+	private int[] getCategoryIdsArrayFromCategoriesList(List<Category> categories) {
+		int[] categoryIds = new int[categories.size()];
+		int i = 0;
+		for (Category category : categories) {
+			categoryIds[i++] = category.getCategoryId();
+		}
+		return categoryIds;
+	}
+
+	/**
+	 * Base method which gets payments id's from database.
+	 * 
+	 * @param categoryId
+	 * @return
+	 * @throws SQLException
+	 */
 	public Set<Integer> getPaymentsIdsByCategory(int[] categoryId) throws SQLException {
 		PreparedStatement stat = connection
 				.prepareStatement("SELECT DISTINCT P.paymentsId FROM payments P INNER JOIN paymentsCategories PC on P.paymentsId = PC.paymentsId where PC.categoryId IN (?);");
@@ -365,4 +392,100 @@ public class DBHelper {
 		return dbReport;
 	}
 
+	public Set<Integer> getPaymentsIdsOnRealizingDate(Date date) throws SQLException {
+		return getPaymentsIdsOnDate("realizingDate", date);
+	}
+
+	public Set<Integer> getPaymentsIdsOnBookingDate(Date date) throws SQLException {
+		return getPaymentsIdsOnDate("bookingDate", date);
+	}
+
+	public Set<Integer> getPaymentsIdsOnDate(String dateField, Date date) throws SQLException {
+		return getPaymentsIdsOnDate(dateField, getTimestampFromDate(date));
+	}
+
+	private Timestamp getTimestampFromDate(Date date) {
+		return new Timestamp(date.getTime());
+	}
+
+	public Set<Integer> getPaymentsIdsOnDate(String dateField, Timestamp date) throws SQLException {
+		return getPaymentsIdsOnDate(dateField, date, '=');
+	}
+
+	public Set<Integer> getPaymentsIdsOnDate(String dateField, Timestamp date, char type) throws SQLException {
+		PreparedStatement stat = connection.prepareStatement(getStatementWithCondition(type));
+		Set<Integer> paymentsIds = new TreeSet<Integer>();
+		stat.setString(1, dateField);
+		stat.setTimestamp(2, date);
+		ResultSet rs = stat.executeQuery();
+		paymentsIds.addAll(getIntegersFromResultSet(rs));
+		rs.close();
+		stat.close();
+		return paymentsIds;
+	}
+
+	public Set<Integer> getPaymentsIdsOnObject(String dateField, Object object, char type) throws SQLException {
+		PreparedStatement stat = connection.prepareStatement(getStatementWithCondition(type));
+		Set<Integer> paymentsIds = new TreeSet<Integer>();
+		stat.setString(1, dateField);
+		stat.setObject(2, object);
+		ResultSet rs = stat.executeQuery();
+		paymentsIds.addAll(getIntegersFromResultSet(rs));
+		rs.close();
+		stat.close();
+		return paymentsIds;
+	}
+
+	public Set<Integer> getPaymentsIdsBetweenDates(String dateField, Date beforeDate, Date afterDate)
+			throws SQLException {
+		return getPaymentsIdsBetweenDates(dateField, getTimestampFromDate(beforeDate), getTimestampFromDate(afterDate));
+	}
+
+	// select * from game WHERE date BETWEEN '2012-1-15' AND '2012-2-15'
+	public Set<Integer> getPaymentsIdsBetweenDates(String dateField, Timestamp beforeDate, Timestamp afterDate)
+			throws SQLException {
+		PreparedStatement stat = connection
+				.prepareStatement("SELECT P.paymentsId FROM payments WHERE ? BETWEEN ? and ?;");
+		Set<Integer> paymentsIds = new TreeSet<Integer>();
+		stat.setString(1, dateField);
+		stat.setTimestamp(2, beforeDate);
+		stat.setTimestamp(2, afterDate);
+		ResultSet rs = stat.executeQuery();
+		paymentsIds.addAll(getIntegersFromResultSet(rs));
+		rs.close();
+		stat.close();
+		return paymentsIds;
+	}
+
+	private String getStatementWithCondition(char type) {
+		return "SELECT paymentsId FROM payments where ? " + type + " ?;";
+	}
+
+
+	public Set<Integer> getPaymentsIdsOnAmount(String dateField, Timestamp date, char type) throws SQLException {
+		PreparedStatement stat = connection.prepareStatement(getStatementWithCondition(type));
+		Set<Integer> paymentsIds = new TreeSet<Integer>();
+		stat.setString(1, dateField);
+		stat.setTimestamp(2, date);
+		ResultSet rs = stat.executeQuery();
+		paymentsIds.addAll(getIntegersFromResultSet(rs));
+		rs.close();
+		stat.close();
+		return paymentsIds;
+	}
+	
+//	public Set<Integer> getPaymentsIdsBetweenDates(String dateField, Timestamp beforeDate, Timestamp afterDate)
+//			throws SQLException {
+//		PreparedStatement stat = connection
+//				.prepareStatement("SELECT P.paymentsId FROM payments WHERE ? BETWEEN ? and ?;");
+//		Set<Integer> paymentsIds = new TreeSet<Integer>();
+//		stat.setString(1, dateField);
+//		stat.setTimestamp(2, beforeDate);
+//		stat.setTimestamp(2, afterDate);
+//		ResultSet rs = stat.executeQuery();
+//		paymentsIds.addAll(getIntegersFromResultSet(rs));
+//		rs.close();
+//		stat.close();
+//		return paymentsIds;
+//	}
 }

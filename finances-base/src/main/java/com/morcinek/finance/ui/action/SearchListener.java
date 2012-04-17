@@ -13,15 +13,14 @@ import javax.swing.event.CaretListener;
 import javax.swing.table.TableModel;
 import javax.swing.table.TableRowSorter;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 @Component
-public class SearchListener implements ActionListener, CaretListener {
+public class SearchListener implements ActionListener, CaretListener, TableManipulator {
 
 	private JTable table;
 
-	@Autowired
+	@Override
 	public void setTable(JTable table) {
 		this.table = table;
 	}
