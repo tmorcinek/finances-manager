@@ -11,6 +11,7 @@ import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
 import com.morcinek.finance.exceptions.FinanceException;
+import com.morcinek.finance.ui.util.AbstractDialog;
 import com.morcinek.finance.util.Alerts;
 
 @Component

@@ -1,16 +1,21 @@
 package com.morcinek.finance.ui.components;
 
-import java.awt.Dimension;
+import java.awt.BorderLayout;
 import java.awt.Label;
 import java.awt.event.ActionListener;
 
-import javax.swing.BoxLayout;
+import javax.annotation.PostConstruct;
 import javax.swing.JPanel;
+import javax.swing.JTable;
 import javax.swing.JTextField;
 import javax.swing.event.CaretListener;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
+import com.morcinek.finance.ui.action.TableManipulator;
+
+@Component
 public class SearchPanel extends JPanel {
 
 	/**
@@ -22,15 +27,14 @@ public class SearchPanel extends JPanel {
 
 	public SearchPanel(String text) {
 		super();
-		setLayout(new BoxLayout(this, BoxLayout.X_AXIS));
-		add(new Label(text));
+		setLayout(new BorderLayout());
+		add(new Label(text), BorderLayout.WEST);
 		textField = new JTextField();
-		add(textField);
+		add(textField, BorderLayout.CENTER);
+	}
 
-		Dimension preferredSize = getPreferredSize();
-		preferredSize.width = getMaximumSize().width;
-		setMinimumSize(preferredSize);
-		setMaximumSize(preferredSize);
+	@PostConstruct
+	public void init() {
 	}
 
 	@Autowired
@@ -41,6 +45,15 @@ public class SearchPanel extends JPanel {
 	@Autowired
 	public void setCaretListener(CaretListener caretListener) {
 		textField.addCaretListener(caretListener);
+	}
+
+	public void setTable(JTable table) {
+		for (ActionListener actionListener : textField.getActionListeners()) {
+			((TableManipulator) actionListener).setTable(table);
+		}
+		for (CaretListener caretListener : textField.getCaretListeners()) {
+			((TableManipulator) caretListener).setTable(table);
+		}
 	}
 
 }

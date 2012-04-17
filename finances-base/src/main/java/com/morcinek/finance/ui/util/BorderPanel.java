@@ -1,10 +1,12 @@
-package com.morcinek.finance.ui.components;
+package com.morcinek.finance.ui.util;
 
 import java.awt.BorderLayout;
 import java.awt.Component;
+import java.awt.event.MouseAdapter;
 
 import javax.swing.JPanel;
 
+@org.springframework.stereotype.Component
 public class BorderPanel extends JPanel {
 
 	/**
@@ -56,4 +58,8 @@ public class BorderPanel extends JPanel {
 		return southComponent;
 	}
 
+	public void setMouseListener(MouseAdapter mouseListener) {
+		addMouseListener(mouseListener);
+		addMouseMotionListener(mouseListener);
+	}
 }

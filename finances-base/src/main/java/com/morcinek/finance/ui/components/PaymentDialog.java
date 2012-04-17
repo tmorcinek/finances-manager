@@ -33,6 +33,7 @@ import com.jgoodies.forms.layout.FormLayout;
 import com.morcinek.finance.database.Category;
 import com.morcinek.finance.database.DBHelper;
 import com.morcinek.finance.database.Payment;
+import com.morcinek.finance.ui.util.BorderPanel;
 import com.morcinek.finance.util.Alerts;
 import com.morcinek.finance.util.ApplicationContextProvider;
 import com.morcinek.finance.util.PropertiesAdapter;

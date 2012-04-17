@@ -43,13 +43,10 @@ public class BaseTable extends JTable {
 
 	private int highlightedRow = -1;
 
-	public BaseTable() {
-		super();
-		getSelectionModel().setSelectionMode(ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);
-	}
-
 	@PostConstruct
 	public void init() {
+		getSelectionModel().setSelectionMode(
+				ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);
 		for (ObjectParser objectParser : fieldParser.getObjectParsers()) {
 			classes.add(objectParser.getValueClass());
 		}
@@ -89,13 +86,16 @@ public class BaseTable extends JTable {
 	}
 
 	@Override
-	public Component prepareRenderer(TableCellRenderer renderer, int row, int column) {
-		JComponent component = (JComponent) super.prepareRenderer(renderer, row, column);
+	public Component prepareRenderer(TableCellRenderer renderer, int row,
+			int column) {
+		JComponent component = (JComponent) super.prepareRenderer(renderer,
+				row, column);
 		int convertRowIndexToModel = row;
 		if (getRowSorter() != null) {
 			convertRowIndexToModel = getRowSorter().convertRowIndexToModel(row);
 		}
-		List<?> payment = ((ListTableModel) getModel()).getRowAt(convertRowIndexToModel);
+		List<?> payment = ((ListTableModel) getModel())
+				.getRowAt(convertRowIndexToModel);
 		if (row == highlightedRow) {
 			component.setBorder(createRowBorder(row, column));
 		}
@@ -103,10 +103,12 @@ public class BaseTable extends JTable {
 			for (RowRendererInterface rowRenderer : priorityQueue) {
 				if (rowRenderer.applies(payment, row)) {
 					if (rowRenderer.getBackgroundColor() != null) {
-						component.setBackground(rowRenderer.getBackgroundColor());
+						component.setBackground(rowRenderer
+								.getBackgroundColor());
 					}
 					if (rowRenderer.getForegroundColor() != null) {
-						component.setForeground(rowRenderer.getForegroundColor());
+						component.setForeground(rowRenderer
+								.getForegroundColor());
 					}
 				}
 			}
@@ -117,9 +119,11 @@ public class BaseTable extends JTable {
 	private MatteBorder createRowBorder(int row, int column) {
 		int top = (row > 0 && isRowSelected(row - 1)) ? 1 : 2;
 		int left = column == 0 ? 2 : 0;
-		int bottom = (row < getRowCount() - 1 && isRowSelected(row + 1)) ? 1 : 2;
+		int bottom = (row < getRowCount() - 1 && isRowSelected(row + 1)) ? 1
+				: 2;
 		int right = column == getColumnCount() - 1 ? 2 : 0;
-		MatteBorder createMatteBorder = BorderFactory.createMatteBorder(top, left, bottom, right, selectionBackground);
+		MatteBorder createMatteBorder = BorderFactory.createMatteBorder(top,
+				left, bottom, right, selectionBackground);
 		return createMatteBorder;
 	}
 
@@ -134,7 +138,8 @@ public class BaseTable extends JTable {
 			getListTableModel().fireTableRowsUpdated(row, row);
 		}
 		if (highlightedRow != -1) {
-			getListTableModel().fireTableRowsUpdated(highlightedRow, highlightedRow);
+			getListTableModel().fireTableRowsUpdated(highlightedRow,
+					highlightedRow);
 		}
 		highlightedRow = row;
 	}

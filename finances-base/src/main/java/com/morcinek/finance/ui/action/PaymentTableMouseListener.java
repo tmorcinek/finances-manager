@@ -11,9 +11,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import com.morcinek.finance.database.Payment;
-import com.morcinek.finance.ui.components.BasePopupMenu;
 import com.morcinek.finance.ui.components.PaymentDialog;
 import com.morcinek.finance.ui.table.BaseTable;
+import com.morcinek.finance.ui.util.BasePopupMenu;
 import com.morcinek.finance.util.ApplicationContextProvider;
 
 @Component

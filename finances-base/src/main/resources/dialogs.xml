@@ -13,11 +13,11 @@ http://www.springframework.org/schema/context/spring-context-3.0.xsd">
 	<import resource="services.xml" />
 
 	<!-- confirm panel -->
-	<bean id="confirmPanel" class="com.morcinek.finance.ui.components.BasePanel"
+	<bean id="confirmPanel" class="com.morcinek.finance.ui.util.BasePanel"
 		scope="prototype" init-method="init">
 		<property name="panelComponents">
 			<list>
-				<bean class="com.morcinek.finance.ui.components.BaseButton">
+				<bean class="com.morcinek.finance.ui.util.BaseButton">
 					<property name="actionCommand">
 						<value>confirm</value>
 					</property>
@@ -25,7 +25,7 @@ http://www.springframework.org/schema/context/spring-context-3.0.xsd">
 						<value>Confirm</value>
 					</property>
 				</bean>
-				<bean class="com.morcinek.finance.ui.components.BaseButton">
+				<bean class="com.morcinek.finance.ui.util.BaseButton">
 					<property name="actionCommand">
 						<value>back</value>
 					</property>
@@ -38,7 +38,7 @@ http://www.springframework.org/schema/context/spring-context-3.0.xsd">
 	</bean>
 
 	<!-- add category panel -->
-	<bean id="addCategoryPanel" class="com.morcinek.finance.ui.components.BorderPanel"
+	<bean id="addCategoryPanel" class="com.morcinek.finance.ui.util.BorderPanel"
 		scope="prototype">
 		<property name="centerComponent">
 			<ref bean="hierarchyPanel" />
@@ -60,24 +60,25 @@ http://www.springframework.org/schema/context/spring-context-3.0.xsd">
 	</bean>
 
 	<!-- add category panel -->
-	<bean id="newCategoryPanel" class="com.morcinek.finance.ui.components.BorderPanel"
+	<bean id="newCategoryPanel" class="com.morcinek.finance.ui.util.BorderPanel"
 		scope="prototype">
 		<property name="northComponent">
-			<bean id="categoryTextField" class="javax.swing.JTextField">
+			<bean id="categoryTextField" class="com.morcinek.finance.ui.util.HintTextField">
 				<constructor-arg>
 					<value type="int">30</value>
 				</constructor-arg>
+				<property name="hint" value="Category Name" />
 			</bean>
 		</property>
 		<property name="centerComponent">
 			<ref bean="hierarchyPanel" />
 		</property>
 		<property name="southComponent">
-			<bean class="com.morcinek.finance.ui.components.BasePanel"
+			<bean class="com.morcinek.finance.ui.util.BasePanel"
 				scope="prototype" init-method="init">
 				<property name="panelComponents">
 					<list>
-						<bean class="com.morcinek.finance.ui.components.BaseButton">
+						<bean class="com.morcinek.finance.ui.util.BaseButton">
 							<property name="actionCommand">
 								<value>add_category</value>
 							</property>
@@ -85,7 +86,7 @@ http://www.springframework.org/schema/context/spring-context-3.0.xsd">
 								<value>Add category</value>
 							</property>
 						</bean>
-						<bean class="com.morcinek.finance.ui.components.BaseButton">
+						<bean class="com.morcinek.finance.ui.util.BaseButton">
 							<property name="actionCommand">
 								<value>delete_category</value>
 							</property>
@@ -93,7 +94,7 @@ http://www.springframework.org/schema/context/spring-context-3.0.xsd">
 								<value>Delete selected Category</value>
 							</property>
 						</bean>
-						<bean class="com.morcinek.finance.ui.components.BaseButton">
+						<bean class="com.morcinek.finance.ui.util.BaseButton">
 							<property name="actionCommand">
 								<value>back</value>
 							</property>
@@ -120,17 +121,17 @@ http://www.springframework.org/schema/context/spring-context-3.0.xsd">
 
 
 	<!-- tags panel -->
-	<bean id="tagsPanel" class="com.morcinek.finance.ui.components.BorderPanel"
+	<bean id="tagsPanel" class="com.morcinek.finance.ui.util.BorderPanel"
 		scope="prototype">
 		<property name="opaque">
 			<value>true</value>
 		</property>
 		<property name="southComponent">
-			<bean class="com.morcinek.finance.ui.components.BasePanel"
+			<bean class="com.morcinek.finance.ui.util.BasePanel"
 				scope="prototype" init-method="init">
 				<property name="panelComponents">
 					<list>
-						<bean class="com.morcinek.finance.ui.components.BaseButton">
+						<bean class="com.morcinek.finance.ui.util.BaseButton">
 							<property name="actionCommand">
 								<value>add_payment_category</value>
 							</property>
@@ -138,7 +139,7 @@ http://www.springframework.org/schema/context/spring-context-3.0.xsd">
 								<value>Add Category to Payment</value>
 							</property>
 						</bean>
-						<bean class="com.morcinek.finance.ui.components.BaseButton">
+						<bean class="com.morcinek.finance.ui.util.BaseButton">
 							<property name="actionCommand">
 								<value>delete_category</value>
 							</property>
@@ -146,7 +147,7 @@ http://www.springframework.org/schema/context/spring-context-3.0.xsd">
 								<value>Delete Category from Payment</value>
 							</property>
 						</bean>
-						<bean class="com.morcinek.finance.ui.components.BaseButton">
+						<bean class="com.morcinek.finance.ui.util.BaseButton">
 							<property name="actionCommand">
 								<value>add_category</value>
 							</property>
@@ -159,4 +160,27 @@ http://www.springframework.org/schema/context/spring-context-3.0.xsd">
 			</bean>
 		</property>
 	</bean>
+	
+	<!-- tags panel -->
+	<bean id="mainCheckedTagsPanel" class="com.morcinek.finance.ui.util.BorderPanel"
+		scope="prototype">
+		<property name="centerComponent">
+			<ref bean="checkedTagsPanel" />
+		</property>
+		<property name="southComponent">
+			<ref bean="confirmPanel" />
+		</property>
+	</bean>
+
+	<!-- tags dialog -->
+	<bean id="tagsDialog" class="com.morcinek.finance.ui.components.TagsDialog"
+		scope="prototype">
+		<property name="title">
+			<value>Get tag to search for</value>
+		</property>
+		<property name="contentPane">
+			<ref bean="mainCheckedTagsPanel" />
+		</property>
+	</bean>
+	
 </beans>
