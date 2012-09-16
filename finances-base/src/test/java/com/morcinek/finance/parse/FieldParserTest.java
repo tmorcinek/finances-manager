@@ -40,7 +40,7 @@ public class FieldParserTest {
 	public void historyParsingTest() throws IOException{
 		HistoryParsing historyParsing = new HistoryParsing(fieldParser);
 		historyParsing.process("src/main/resources/history/historia.csv");
-		List<String> headerList = historyParsing.getHeaderList();
+		List<String> headerList = historyParsing.getComments();
 		List<Payment> payments = historyParsing.getPayments();
 		assertTrue(true);
 	}

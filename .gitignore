@@ -2,3 +2,5 @@
 # Ignore any file named foo.txt.
 /finances-base/target/
 /finances-base/bin/
+/finances-base/*.db
+/finances-base/src/main/generated/
