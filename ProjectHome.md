@@ -1,0 +1,1 @@
+Project is to create a tool that could help managing peoples finances. In the beginning phase data downloaded from bank account in CSV file are displayed in table.
